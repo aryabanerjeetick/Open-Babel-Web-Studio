@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Babel Web - Chemical & Macromolecular Workbench</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Local 3Dmol.js library with CDN fallback -->
+  <script src="libs/3Dmol-min.js"></script>
+</head>
+<body class="theme-dark">
+  <!-- Top Application Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <div class="logo-title-group">
+          <h1>Open Babel Web</h1>
+          <span class="engine-badge" id="engineBadge">Open Babel 3.1.1 + RDKit</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Quick Controls -->
+    <div class="header-center">
+      <div class="sample-loader-group">
+        <label for="sampleSelect" class="sr-only">Load Sample Structure</label>
+        <select id="sampleSelect" class="select-input" aria-label="Load Sample Structure">
+          <option value="" disabled selected>📂 Load Sample Molecule / Protein...</option>
+          <optgroup label="Small Molecules & Ligands">
+            <option value="ethanol.smi">Ethanol (SMILES - CCO)</option>
+            <option value="water.xyz">Water (XYZ Cartesian)</option>
+            <option value="caffeine.mol">Caffeine (MOL V2000)</option>
+            <option value="aspirin.sdf">Aspirin (SDF 3D)</option>
+            <option value="paracetamol.mol">Paracetamol (MOL 3D)</option>
+            <option value="thalidomide.mol2">Thalidomide (MOL2 Sybyl)</option>
+            <option value="ligand_docking.pdbqt">Docking Ligand (AutoDock PDBQT)</option>
+            <option value="conformers_butane.sdf">Butane Conformers (Multi-conf SDF)</option>
+            <option value="multimol_library.sdf">Multi-Mol Library (3 Mols SDF)</option>
+          </optgroup>
+          <optgroup label="Macromolecules & Proteins">
+            <option value="peptide_leu_enkephalin.pdb">Leu-Enkephalin (Peptide PDB)</option>
+            <option value="crambin_1crn.pdb">1CRN Crambin (Plant Protein PDB)</option>
+            <option value="streptavidin_biotin_1stp.pdb">1STP Streptavidin + Biotin (Ligand & Waters PDB)</option>
+            <option value="insulin_2chains.pdb">Insulin Multi-Chain (Chains A & B PDB)</option>
+            <option value="zinc_finger_metal.pdb">Zinc Finger Domain (Zn2+ Ion PDB)</option>
+          </optgroup>
+          <optgroup label="Quantum, Dynamics & Other">
+            <option value="methane.gjf">Methane (Gaussian GJF)</option>
+            <option value="ethane.gro">Ethane (GROMACS GRO)</option>
+            <option value="glucose.cml">D-Glucose (Chemical Markup CML)</option>
+            <option value="ubiquitin.fasta">Ubiquitin (FASTA Sequence)</option>
+          </optgroup>
+        </select>
+        <button id="btnLoadSample" class="btn btn-outline" title="Load chosen sample">Load</button>
+      </div>
+    </div>
+
+    <!-- Header Right Status & Theme -->
+    <div class="header-right">
+      <button id="btnThemeToggle" class="btn btn-icon" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+        <span class="theme-icon">🌓</span>
+      </button>
+      <button id="btnPasteModal" class="btn btn-secondary" title="Paste raw molecular text">
+        📋 Paste Data
+      </button>
+    </div>
+  </header>
+
+
+  <!-- Quick SMILES Bar -->
+  <section class="smiles-bar">
+    <div class="smiles-inner">
+      <label for="smilesInput" class="smiles-label">SMILES Input:</label>
+      <div class="smiles-input-group">
+        <input type="text" id="smilesInput" class="text-input" placeholder="e.g. CCO or CC(=O)Oc1ccccc1C(=O)O" aria-label="Enter SMILES formula">
+        <button id="btnLoadSmiles" class="btn btn-primary">Load Molecule</button>
+      </div>
+      <div class="quick-chips">
+        <button class="chip" data-smi="CCO">Ethanol</button>
+        <button class="chip" data-smi="c1ccccc1">Benzene</button>
+        <button class="chip" data-smi="Cn1cnc2c1c(=O)n(c(=O)n2C)C">Caffeine</button>
+        <button class="chip" data-smi="CC(=O)Oc1ccccc1C(=O)O">Aspirin</button>
+        <button class="chip" data-smi="CC(C)Cc1ccc(cc1)C(C)C(=O)O">Ibuprofen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Three-Panel Application Grid -->
+  <main class="app-layout">
+    <!-- LEFT PANEL: Upload, Conversion Controls & Molecular Operations -->
+    <aside class="panel left-panel">
+      <!-- File Upload Zone -->
+      <section class="card upload-card">
+        <h2 class="card-title">1. Structure Input</h2>
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" class="file-input-hidden" accept=".smi,.smiles,.can,.sdf,.sd,.mol,.mdl,.mol2,.pdb,.ent,.pdbqt,.xyz,.cif,.mmcif,.mcif,.cml,.cdx,.mop,.mopin,.mopout,.gjf,.com,.gro,.fasta,.fa,.inchi,.inchikey">
+          <div class="drop-zone-content">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p class="drop-title">Drag & drop chemical file here</p>
+            <p class="drop-sub">or <button type="button" class="btn-link" id="btnBrowseFile">browse from device</button></p>
+            <p class="supported-hint">SDF, PDB, PDBQT, MOL2, MOL, SMI, XYZ, CIF, mmCIF, CML, CDX, GRO, etc.</p>
+          </div>
+        </div>
+
+        <div class="loaded-file-badge" id="loadedFileBadge" style="display: none;">
+          <div class="file-meta">
+            <span class="file-name" id="badgeFilename">-</span>
+            <span class="file-format-pill" id="badgeFormat">-</span>
+            <span class="file-size" id="badgeSize">-</span>
+          </div>
+          <button id="btnClearFile" class="btn-icon btn-sm" title="Clear current structure">✕</button>
+        </div>
+      </section>
+
+      <!-- Conversion Control Card -->
+      <section class="card conversion-card">
+        <h2 class="card-title">2. Open Babel Format Converter</h2>
+        <div class="form-group">
+          <label for="targetFormatSelect" class="field-label">Target Format:</label>
+          <select id="targetFormatSelect" class="select-input">
+            <option value="" disabled selected>Select output format...</option>
+            <optgroup label="Standard Small Molecule Formats">
+              <option value="sdf">SDF - MDL Structure-Data File</option>
+              <option value="mol">MOL - MDL Molfile (V2000)</option>
+              <option value="mol2">MOL2 - Tripos SYBYL</option>
+              <option value="smi">SMILES - Chemical Graph</option>
+              <option value="can">Canonical SMILES</option>
+              <option value="xyz">XYZ - Cartesian Coordinates</option>
+              <option value="cml">CML - Chemical Markup Language</option>
+              <option value="cif">CIF - Crystallographic Info</option>
+            </optgroup>
+            <optgroup label="Macromolecule & Docking Formats">
+              <option value="pdb">PDB - Protein Data Bank</option>
+              <option value="pdbqt">PDBQT - AutoDock Docking</option>
+              <option value="mcif">mmCIF - Macromolecular CIF</option>
+              <option value="gro">GRO - GROMACS Coordinate</option>
+              <option value="fasta">FASTA - Polymer Sequence</option>
+            </optgroup>
+            <optgroup label="Identifiers & Quantum Formats">
+              <option value="inchi">InChI - IUPAC Identifier</option>
+              <option value="inchikey">InChIKey - 27-Char Hashed Key</option>
+              <option value="gjf">Gaussian Input (GJF / COM)</option>
+              <option value="mop">MOPAC Semi-Empirical Format</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Open Babel Style Command Options -->
+        <div class="form-group options-group">
+          <label class="field-label">Open Babel Conversion Flags:</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-label" title="Explicitly add hydrogen atoms (-h)">
+              <input type="checkbox" id="optAddH"> Add Hydrogens (<code>-h</code>)
+            </label>
+            <label class="checkbox-label" title="Remove non-polar/all hydrogens (-d)">
+              <input type="checkbox" id="optDelH"> Remove Hydrogens (<code>-d</code>)
+            </label>
+            <label class="checkbox-label" title="Generate 3D coordinates using force field (--gen3d)">
+              <input type="checkbox" id="optGen3D"> Generate 3D Coords (<code>--gen3d</code>)
+            </label>
+            <label class="checkbox-label" title="Generate clean 2D coordinates (--gen2d)">
+              <input type="checkbox" id="optGen2D"> Generate 2D Coords (<code>--gen2d</code>)
+            </label>
+            <label class="checkbox-label" title="Standardize to canonical atom order (--canonical)">
+              <input type="checkbox" id="optCanonical"> Canonical Order
+            </label>
+            <label class="checkbox-label" title="Center coordinates at origin (-c)">
+              <input type="checkbox" id="optCenter"> Center Molecule (<code>-c</code>)
+            </label>
+            <label class="checkbox-label" title="Remove water molecules (HOH/WAT)">
+              <input type="checkbox" id="optRemoveWater"> Strip Waters
+            </label>
+          </div>
+        </div>
+
+        <button id="btnConvert" class="btn btn-primary btn-block" disabled>
+          <span class="btn-text">⚡ Convert & Validate</span>
+        </button>
+      </section>
+
+      <!-- Molecular Manipulations Card -->
+      <section class="card manipulation-card">
+        <h2 class="card-title">3. Structure Manipulations</h2>
+        <div class="action-button-grid">
+          <button id="btnManipAddH" class="btn btn-outline btn-sm" title="Add explicit hydrogens">➕ Add H</button>
+          <button id="btnManipDelH" class="btn btn-outline btn-sm" title="Delete explicit hydrogens">➖ Delete H</button>
+          <button id="btnManipGen3D" class="btn btn-outline btn-sm" title="Generate 3D Cartesian coordinates">🌐 Generate 3D</button>
+          <button id="btnManipStripWater" class="btn btn-outline btn-sm" title="Strip solvent water molecules">💧 Strip Waters</button>
+          <button id="btnManipStripHet" class="btn btn-outline btn-sm" title="Remove heteroatoms">🔬 Strip Hetero</button>
+          <button id="btnManipCenter" class="btn btn-outline btn-sm" title="Center coordinates at (0,0,0)">🎯 Center (0,0,0)</button>
+          <button id="btnManipMMFF" class="btn btn-outline btn-sm" title="Force field geometry optimization">✨ Minimize (MMFF)</button>
+        </div>
+      </section>
+    </aside>
+
+    <!-- CENTER PANEL: Interactive 2D & 3D Molecular Viewer -->
+    <section class="panel center-panel">
+      <div class="viewer-header">
+        <div class="view-mode-tabs">
+          <button class="tab-btn active" data-view="3d">3D WebGL Viewer</button>
+          <button class="tab-btn" data-view="2d">2D Chemical Diagram</button>
+          <button class="tab-btn" data-view="split">Split View (2D + 3D)</button>
+        </div>
+        <div class="viewer-actions">
+          <button id="btnResetView" class="btn btn-sm btn-outline" title="Reset camera view">↺ Reset View</button>
+          <button id="btnCenterMol" class="btn btn-sm btn-outline" title="Center camera on molecule">🎯 Center</button>
+          <button id="btnScreenshot" class="btn btn-sm btn-outline" title="Export PNG screenshot">📷 Snapshot</button>
+          <button id="btnFullscreen" class="btn btn-sm btn-icon" title="Toggle Fullscreen">⛶</button>
+        </div>
+      </div>
+
+      <!-- Viewer Toolbar Controls -->
+      <div class="viewer-toolbar" id="viewerToolbar">
+        <!-- Style representation -->
+        <div class="toolbar-item">
+          <label for="repStyleSelect" class="toolbar-label">Style:</label>
+          <select id="repStyleSelect" class="select-input select-sm">
+            <option value="stick">Stick</option>
+            <option value="ballAndStick" selected>Ball & Stick</option>
+            <option value="sphere">Space-Filling (VDW)</option>
+            <option value="line">Wireframe</option>
+            <option value="cartoon">Cartoon (Proteins)</option>
+            <option value="ribbon">Ribbon (Proteins)</option>
+            <option value="surface">Molecular Surface</option>
+          </select>
+        </div>
+
+        <!-- Color scheme -->
+        <div class="toolbar-item">
+          <label for="colorSchemeSelect" class="toolbar-label">Color:</label>
+          <select id="colorSchemeSelect" class="select-input select-sm">
+            <option value="element" selected>Element (CPK)</option>
+            <option value="chain">Chain Identifier</option>
+            <option value="residue">Residue Type</option>
+            <option value="ss">Secondary Structure</option>
+            <option value="bFactor">B-Factor Temperature</option>
+          </select>
+        </div>
+
+        <!-- Chain Filter dropdown -->
+        <div class="toolbar-item" id="chainFilterContainer">
+          <label for="chainFilterSelect" class="toolbar-label">Chain:</label>
+          <select id="chainFilterSelect" class="select-input select-sm">
+            <option value="ALL" selected>All Chains</option>
+          </select>
+        </div>
+
+        <!-- Macromolecule Component Toggles -->
+        <div class="toolbar-item toggles-item">
+          <label class="toggle-pill" title="Toggle crystallographic water display">
+            <input type="checkbox" id="toggleWaters" checked>
+            <span>Waters</span>
+          </label>
+          <label class="toggle-pill" title="Toggle hydrogen display">
+            <input type="checkbox" id="toggleHydrogens" checked>
+            <span>Hydrogens</span>
+          </label>
+          <label class="toggle-pill" title="Toggle heteroatoms display">
+            <input type="checkbox" id="toggleHetero" checked>
+            <span>Hetero</span>
+          </label>
+          <label class="toggle-pill" title="Highlight bound ligands">
+            <input type="checkbox" id="toggleLigands" checked>
+            <span>Ligands</span>
+          </label>
+        </div>
+
+        <!-- Background color -->
+        <div class="toolbar-item">
+          <label for="bgColorSelect" class="toolbar-label">BG:</label>
+          <select id="bgColorSelect" class="select-input select-sm">
+            <option value="0x121820" selected>Dark</option>
+            <option value="0xffffff">White</option>
+            <option value="0x1e293b">Slate</option>
+            <option value="0x000000">Black</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3D & 2D Containers -->
+      <div class="viewer-viewport" id="viewerViewport">
+        <!-- 3D WebGL Canvas -->
+        <div id="glviewer" class="glviewer-container"></div>
+
+        <!-- 2D Molecular Diagram Container -->
+        <div id="depict2dContainer" class="depict-container" style="display: none;">
+          <div class="depict-header">
+            <span class="depict-title">Clean 2D Vector Structure</span>
+            <div class="depict-downloads">
+              <button id="btnDownloadSvg" class="btn btn-sm btn-outline">⬇ Download SVG</button>
+              <button id="btnDownloadPng" class="btn btn-sm btn-outline">⬇ Download PNG</button>
+            </div>
+          </div>
+          <div id="svgMountPoint" class="svg-mount">
+            <p class="placeholder-text">Load or convert a chemical molecule to view 2D vector depiction.</p>
+          </div>
+        </div>
+
+        <!-- Interactive Atom Click Inspector Card (Floating/Docked) -->
+        <div id="atomInspectorCard" class="atom-inspector-card" style="display: none;">
+          <div class="inspector-header">
+            <span class="inspector-title" id="inspTitle">Atom #1 - C</span>
+            <button id="btnCloseInspector" class="btn-icon btn-sm">✕</button>
+          </div>
+          <div class="inspector-body" id="inspBody">
+            <!-- Dynamically populated on click -->
+          </div>
+        </div>
+
+        <!-- 3D Coordinates missing notice -->
+        <div id="noCoordinatesNotice" class="overlay-notice" style="display: none;">
+          <div class="notice-card">
+            <h3>⚠️ 1D Structure Loaded (No 3D Coordinates)</h3>
+            <p>The input format (e.g. SMILES/InChI) defines chemical connectivity without 3D spatial coordinates.</p>
+            <button id="btnNoticeGen3D" class="btn btn-primary">🌐 Generate 3D Coordinates via Open Babel Force Field</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: Structural Information, Inspection Table, Validation Report, Batch & Logs -->
+    <aside class="panel right-panel">
+      <!-- Right Navigation Tabs -->
+      <nav class="right-tabs-nav">
+        <button class="right-tab-btn active" data-tab="info">Overview</button>
+        <button class="right-tab-btn" data-tab="atoms">Atoms Table</button>
+        <button class="right-tab-btn" data-tab="validation">Validation</button>
+        <button class="right-tab-btn" data-tab="batch">Batch Convert</button>
+        <button class="right-tab-btn" data-tab="formats">Formats Matrix</button>
+        <button class="right-tab-btn" data-tab="logs">Audit Logs</button>
+      </nav>
+
+      <div class="right-tab-content">
+        <!-- TAB 1: OVERVIEW & PROPERTIES -->
+        <div id="tabInfo" class="tab-pane active">
+          <!-- Small molecule / Protein summary header -->
+          <div class="card info-card">
+            <h3 class="card-title" id="structTitle">Molecular Overview</h3>
+            <div class="metrics-grid" id="metricsGrid">
+              <div class="metric-box">
+                <span class="metric-val" id="metricAtoms">-</span>
+                <span class="metric-lbl">Atoms</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metricHeavyAtoms">-</span>
+                <span class="metric-lbl">Heavy Atoms</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metricBonds">-</span>
+                <span class="metric-lbl">Bonds</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metricMW">-</span>
+                <span class="metric-lbl">Mol. Weight</span>
+              </div>
+            </div>
+
+            <table class="property-table" id="propTable">
+              <tbody>
+                <tr><th>Formula</th><td id="propFormula">-</td></tr>
+                <tr><th>Exact Mass</th><td id="propExactMass">-</td></tr>
+                <tr><th>Formal Charge</th><td id="propCharge">-</td></tr>
+                <tr><th>LogP</th><td id="propLogP">-</td></tr>
+                <tr><th>TPSA</th><td id="propTPSA">-</td></tr>
+                <tr><th>H-Bond Donors / Acceptors</th><td id="propHBDHBA">-</td></tr>
+                <tr><th>Rotatable Bonds</th><td id="propRotatable">-</td></tr>
+                <tr><th>Rings / Aromatic Atoms</th><td id="propRings">-</td></tr>
+                <tr><th>SMILES</th><td id="propSMILES" class="code-val">-</td></tr>
+                <tr><th>InChI</th><td id="propInChI" class="code-val">-</td></tr>
+                <tr><th>InChIKey</th><td id="propInChIKey" class="code-val">-</td></tr>
+              </tbody>
+            </table>
+
+            <!-- Macromolecule Specific Details -->
+            <div id="macroDetailsCard" style="display: none; margin-top: 1rem;">
+              <h4 class="subhead">Macromolecular Features</h4>
+              <table class="property-table">
+                <tbody>
+                  <tr><th>Chains</th><td id="macroChains">-</td></tr>
+                  <tr><th>Residues Count</th><td id="macroResidues">-</td></tr>
+                  <tr><th>Bound Ligands</th><td id="macroLigands">-</td></tr>
+                  <tr><th>Waters Count</th><td id="macroWaters">-</td></tr>
+                  <tr><th>Metal Ions</th><td id="macroMetals">-</td></tr>
+                  <tr><th>Resolution</th><td id="macroResolution">-</td></tr>
+                  <tr><th>Method</th><td id="macroMethod">-</td></tr>
+                  <tr><th>B-Factor Range</th><td id="macroBfactor">-</td></tr>
+                  <tr><th>Bounding Box</th><td id="macroBoundingBox">-</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: ATOM INSPECTION TABLE -->
+        <div id="tabAtoms" class="tab-pane">
+          <div class="atom-table-controls">
+            <input type="text" id="atomSearchInput" class="text-input text-input-sm" placeholder="🔍 Search element, residue, atom name, chain...">
+            <span class="atom-count-badge" id="atomFilterCount">Showing 0 atoms</span>
+          </div>
+          <div class="table-scroll-container">
+            <table class="data-table" id="atomTable">
+              <thead>
+                <tr id="atomTableHeader">
+                  <th>#</th>
+                  <th>Element</th>
+                  <th>Name</th>
+                  <th>Residue</th>
+                  <th>Chain</th>
+                  <th>X</th>
+                  <th>Y</th>
+                  <th>Z</th>
+                  <th>B-Factor</th>
+                </tr>
+              </thead>
+              <tbody id="atomTableBody">
+                <tr><td colspan="9" class="text-center">No molecule loaded.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: CONVERSION & VALIDATION REPORT -->
+        <div id="tabValidation" class="tab-pane">
+          <div class="card validation-card">
+            <div class="validation-status-header" id="valStatusHeader">
+              <span class="status-badge status-idle" id="valStatusBadge">No Conversion Yet</span>
+              <p class="status-message" id="valStatusMsg">Convert a structure to inspect automated validation and preservation audit.</p>
+            </div>
+
+            <!-- Download and Load Converted Action Buttons -->
+            <div class="val-actions" id="valActions" style="display: none;">
+              <button id="btnDownloadConverted" class="btn btn-primary">⬇ Download Converted File</button>
+              <button id="btnLoadConvertedInViewer" class="btn btn-secondary">👁 Load in Viewer</button>
+              <button id="btnDownloadValReport" class="btn btn-outline">📄 Export Report</button>
+            </div>
+
+            <div class="preservation-sections" id="valPreservationSections" style="display: none;">
+              <div class="feature-box preserved-box">
+                <h4>✅ Preserved Structural Features</h4>
+                <ul id="listPreserved"></ul>
+              </div>
+              <div class="feature-box lost-box">
+                <h4>⚠️ Format Limitations & Information Loss</h4>
+                <ul id="listLost"></ul>
+              </div>
+              <div class="feature-box table-box">
+                <h4>📊 Property Comparison Audit (Input vs Output)</h4>
+                <table class="data-table" id="valCompTable">
+                  <thead>
+                    <tr><th>Property</th><th>Input</th><th>Output</th><th>Audit Status</th></tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: BATCH CONVERSION -->
+        <div id="tabBatch" class="tab-pane">
+          <div class="card batch-card">
+            <h3 class="card-title">Multi-File Batch Conversion</h3>
+            <p class="card-sub">Upload multiple molecular files to convert concurrently with individual validation and consolidated ZIP download.</p>
+
+            <div class="batch-upload-zone" id="batchDropZone">
+              <input type="file" id="batchFileInput" multiple class="file-input-hidden">
+              <p>📁 Drag & drop multiple files or <button type="button" class="btn-link" id="btnBatchBrowse">browse</button></p>
+              <span id="batchCountBadge">0 files queued</span>
+            </div>
+
+            <div class="batch-controls">
+              <label for="batchTargetFormatSelect" class="field-label">Target Format:</label>
+              <select id="batchTargetFormatSelect" class="select-input">
+                <option value="mol2" selected>MOL2 - Tripos SYBYL</option>
+                <option value="sdf">SDF - Structure Data File</option>
+                <option value="pdb">PDB - Protein Data Bank</option>
+                <option value="pdbqt">PDBQT - AutoDock Docking</option>
+                <option value="smi">SMILES - Linear Graph</option>
+                <option value="xyz">XYZ - Cartesian</option>
+              </select>
+              <button id="btnRunBatch" class="btn btn-primary btn-block" disabled>⚡ Convert All Files</button>
+            </div>
+
+            <div class="batch-results-container" id="batchResultsContainer" style="display: none;">
+              <div class="batch-header-actions">
+                <span id="batchSummaryStats">Results: 0/0 successful</span>
+                <button id="btnDownloadBatchZip" class="btn btn-primary btn-sm">📦 Download ZIP Archive</button>
+              </div>
+              <div class="table-scroll-container">
+                <table class="data-table" id="batchTable">
+                  <thead>
+                    <tr><th>File</th><th>Detected</th><th>Target</th><th>Status</th><th>Validation</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="batchTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: FORMAT CAPABILITY MATRIX -->
+        <div id="tabFormats" class="tab-pane">
+          <div class="card format-matrix-card">
+            <h3 class="card-title">Supported Format Capability Matrix</h3>
+            <p class="card-sub">Real-time capabilities verified against Open Babel and internal cheminformatics modules.</p>
+            <input type="text" id="formatSearchInput" class="text-input text-input-sm" placeholder="🔍 Search format (e.g. SDF, PDB, CIF, MOL2)...">
+            <div class="table-scroll-container">
+              <table class="data-table format-matrix-table" id="formatMatrixTable">
+                <thead>
+                  <tr>
+                    <th>Format</th>
+                    <th>Ext</th>
+                    <th>Read</th>
+                    <th>Write</th>
+                    <th>2D</th>
+                    <th>3D</th>
+                    <th>Protein</th>
+                    <th>Ligand</th>
+                  </tr>
+                </thead>
+                <tbody id="formatMatrixTableBody">
+                  <!-- Dynamically loaded from /api/formats -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: AUDIT & CLI LOGS -->
+        <div id="tabLogs" class="tab-pane">
+          <div class="card logs-card">
+            <div class="logs-header">
+              <h3 class="card-title">Open Babel Execution Audit Logs</h3>
+              <button id="btnClearLogs" class="btn btn-sm btn-outline">Clear Logs</button>
+            </div>
+            <div class="logs-console" id="logsConsole">
+              <div class="log-entry log-system">[SYSTEM] Open Babel Web initialized. Ready for operations.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal: Paste Molecular Data -->
+  <dialog id="pasteModal" class="app-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3>Paste Chemical / Structural Data</h3>
+        <button id="btnClosePasteModal" class="btn-icon">✕</button>
+      </div>
+      <div class="dialog-body">
+        <label for="pasteContentArea" class="field-label">Paste SMILES, SDF, MOL, PDB, MOL2, XYZ, CIF, mmCIF, FASTA:</label>
+        <textarea id="pasteContentArea" class="textarea-input" rows="12" placeholder="Paste structural data or SMILES string here..."></textarea>
+        <div class="dialog-controls">
+          <label for="pasteFormatSelect" class="field-label">Format:</label>
+          <select id="pasteFormatSelect" class="select-input select-sm">
+            <option value="AUTO" selected>Auto-Detect Format</option>
+            <option value="smi">SMILES</option>
+            <option value="sdf">SDF</option>
+            <option value="mol">MOL (V2000/V3000)</option>
+            <option value="pdb">PDB</option>
+            <option value="pdbqt">AutoDock PDBQT</option>
+            <option value="mol2">MOL2</option>
+            <option value="xyz">XYZ</option>
+            <option value="cif">CIF</option>
+            <option value="mcif">mmCIF</option>
+            <option value="cml">CML</option>
+            <option value="fasta">FASTA</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button id="btnCancelPaste" class="btn btn-outline">Cancel</button>
+        <button id="btnSubmitPaste" class="btn btn-primary">Load Pasted Structure</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Application Scripts -->
+  <script src="js/samples-data.js"></script>
+  <script src="js/cheminformatics.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/viewer.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/format-matrix.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
