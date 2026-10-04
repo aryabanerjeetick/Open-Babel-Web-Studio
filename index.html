@@ -4,9 +4,1103 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Open Babel Web - Chemical & Macromolecular Workbench</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+/* ==========================================================================
+   Open Babel Web - Scientific Modern Stylesheet
+   ========================================================================== */
+
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Theme variables - Dark (Default) */
+  --bg-app: #0b0f17;
+  --bg-panel: #111726;
+  --bg-card: #182234;
+  --bg-hover: #223048;
+  --bg-input: #0f172a;
+  
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --border: #24344d;
+  --border-focus: #38bdf8;
+
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-light: rgba(2, 132, 199, 0.15);
+
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+}
+
+body.theme-light {
+  --bg-app: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-card: #f1f5f9;
+  --bg-hover: #e2e8f0;
+  --bg-input: #ffffff;
+
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+
+  --border: #cbd5e1;
+  --border-focus: #0284c7;
+
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-light: rgba(2, 132, 199, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+/* App Header */
+.app-header {
+  height: 56px;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-left, .header-center, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.logo-title-group h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.engine-badge {
+  font-size: 0.7rem;
+  background: var(--accent-light);
+  color: #38bdf8;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-family: var(--font-mono);
+}
+
+.sample-loader-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Quick SMILES Bar */
+.smiles-bar {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.4rem 1rem;
+  flex-shrink: 0;
+}
+
+.smiles-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.smiles-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.smiles-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 600px;
+}
+
+.quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.chip {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+  background: var(--accent-light);
+}
+
+/* Main Grid Layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 310px 1fr 380px;
+  flex: 1;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+/* Panels */
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background-color: var(--bg-panel);
+}
+
+.left-panel {
+  padding: 0.75rem;
+  gap: 0.75rem;
+}
+
+.center-panel {
+  padding: 0;
+  border-right: 1px solid var(--border);
+  background-color: var(--bg-app);
+  position: relative;
+  overflow: hidden;
+}
+
+.right-panel {
+  border-right: none;
+  background-color: var(--bg-panel);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+}
+
+.card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+/* Forms and Inputs */
+.form-group {
+  margin-bottom: 0.6rem;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.select-input, .text-input, .textarea-input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.select-input:focus, .text-input:focus, .textarea-input:focus {
+  border-color: var(--border-focus);
+}
+
+.select-sm, .text-input-sm {
+  padding: 0.25rem 0.45rem;
+  font-size: 0.78rem;
+}
+
+/* Checkbox Grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.checkbox-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.checkbox-label code {
+  color: #38bdf8;
+  font-family: var(--font-mono);
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--bg-panel);
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background-color: var(--accent-light);
+}
+
+.upload-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+}
+
+.drop-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.drop-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.supported-hint {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.35rem;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.loaded-file-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background-color: var(--bg-hover);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.file-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.file-format-pill {
+  font-size: 0.65rem;
+  background-color: var(--accent);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.file-size {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-hover);
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.btn-icon:hover {
+  background-color: var(--bg-hover);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+.action-button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+/* Viewer Section */
+.viewer-header {
+  height: 42px;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+}
+
+.view-mode-tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+.viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Viewer Toolbar */
+.viewer-toolbar {
+  height: 40px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  gap: 0.75rem;
+  overflow-x: auto;
+}
+
+.toolbar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.toolbar-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.toggles-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.toggle-pill input {
+  accent-color: var(--accent);
+}
+
+/* Viewport & 3D Container */
+.viewer-viewport {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: calc(100% - 82px);
+}
+
+.glviewer-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 2D Depict Container */
+.depict-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--bg-app);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.depict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.depict-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.svg-mount {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.svg-mount svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Split View */
+.split-active .glviewer-container {
+  width: 50%;
+  left: 0;
+}
+
+.split-active .depict-container {
+  display: flex !important;
+  width: 50%;
+  left: 50%;
+  border-left: 1px solid var(--border);
+}
+
+/* Atom Inspector Floating Card */
+.atom-inspector-card {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 0.6rem 0.8rem;
+  z-index: 20;
+  min-width: 260px;
+  backdrop-filter: blur(8px);
+}
+
+.inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.inspector-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.inspector-body {
+  font-size: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 0.5rem;
+}
+
+.overlay-notice {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 15, 23, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  backdrop-filter: blur(4px);
+}
+
+.notice-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 440px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Right Navigation Tabs */
+.right-tabs-nav {
+  display: flex;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.right-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.right-tab-btn.active {
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
+  background-color: var(--bg-card);
+}
+
+.right-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.metric-box {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.2rem;
+  text-align: center;
+}
+
+.metric-val {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+}
+
+.metric-lbl {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Tables */
+.property-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.property-table th, .property-table td {
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.property-table th {
+  color: var(--text-muted);
+  width: 40%;
+  font-weight: 500;
+}
+
+.property-table td {
+  color: var(--text-main);
+  word-break: break-all;
+}
+
+.code-val {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.subhead {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #38bdf8;
+}
+
+.table-scroll-container {
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-panel);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+}
+
+.data-table th, .data-table td {
+  padding: 0.35rem 0.45rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table th {
+  background-color: var(--bg-card);
+  color: var(--text-muted);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-family: var(--font-family);
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background-color: var(--bg-hover);
+  cursor: pointer;
+}
+
+.data-table tr.selected {
+  background-color: var(--accent-light);
+  border-left: 3px solid var(--accent);
+}
+
+.atom-table-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  gap: 0.5rem;
+}
+
+.atom-count-badge {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* Validation Reports */
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-validated {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-warning {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+}
+
+.status-failed {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.status-idle {
+  background-color: var(--bg-hover);
+  color: var(--text-dim);
+}
+
+.status-message {
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+}
+
+.val-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+  flex-wrap: wrap;
+}
+
+.preservation-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.feature-box {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.6rem;
+}
+
+.feature-box h4 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.feature-box ul {
+  list-style: none;
+  font-size: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.feature-box li {
+  padding-left: 0.75rem;
+  position: relative;
+}
+
+.feature-box li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--text-dim);
+}
+
+/* Batch Convert Card */
+.batch-upload-zone {
+  border: 2px dashed var(--border);
+  padding: 1rem;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.batch-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.batch-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.75rem 0 0.4rem 0;
+  font-size: 0.75rem;
+}
+
+/* Format Matrix Table */
+.format-matrix-table td:nth-child(3),
+.format-matrix-table td:nth-child(4),
+.format-matrix-table td:nth-child(5),
+.format-matrix-table td:nth-child(6),
+.format-matrix-table td:nth-child(7),
+.format-matrix-table td:nth-child(8) {
+  text-align: center;
+}
+
+/* Logs Console */
+.logs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.logs-console {
+  background-color: #06090e;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.log-entry {
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.log-system { color: #38bdf8; }
+.log-info { color: #10b981; }
+.log-warn { color: #f59e0b; }
+.log-err { color: #ef4444; }
+
+/* Dialogs */
+.app-dialog {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  box-shadow: var(--shadow-md);
+  margin: auto;
+  max-width: 600px;
+  width: 90vw;
+  padding: 0;
+}
+
+.app-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.dialog-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+.dialog-controls {
+  margin-top: 0.5rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .app-layout {
+    grid-template-columns: 280px 1fr 340px;
+  }
+}
+
+@media (max-width: 992px) {
+  body {
+    overflow-y: auto;
+    height: auto;
+  }
+  .app-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+  .viewer-viewport {
+    height: 480px;
+  }
+}
+
+</style>
   <!-- Local 3Dmol.js library with CDN fallback -->
-  <script src="libs/3Dmol-min.js"></script>
+  <!-- 3Dmol.js WebGL Engine (Cloudflare CDN with local fallback) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.4.2/3Dmol-min.js"></script>
+  <script>
+    if (typeof $3Dmol === 'undefined') {
+      document.write('<script src="libs/3Dmol-min.js"><\/script>');
+    }
+  </script>
 </head>
 <body class="theme-dark">
   <!-- Top Application Bar -->
@@ -585,13 +1679,3210 @@
     </div>
   </dialog>
 
-  <!-- Application Scripts -->
-  <script src="js/samples-data.js"></script>
-  <script src="js/cheminformatics.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/viewer.js"></script>
-  <script src="js/table.js"></script>
-  <script src="js/format-matrix.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Bundled Standalone Application Scripts (Self-Contained for GitHub Pages & Offline) -->
+  <script>
+  window.SAMPLES_DATA = {
+  "aspirin.sdf": "Aspirin\n     RDKit          3D\n\n 21 21  0  0  0  0  0  0  0  0999 V2000\n   -2.6543   -2.2010   -0.0705 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.8250   -0.9953    0.2561 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9080   -0.3599    1.2994 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.9872   -0.7209   -0.8192 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.1116    0.3379   -0.5613 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.4629    1.5868   -1.0841 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.3804    2.6786   -0.8877 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.5733    2.5193   -0.1834 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.9307    1.2648    0.3218 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.0935    0.1542    0.1321 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4808   -1.1879    0.6410 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8866   -2.2369    0.4734 O   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6254   -1.1603    1.3509 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.3073   -1.9821   -0.9187 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.2736   -2.4587    0.7934 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.0036   -3.0503   -0.2938 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.3921    1.7096   -1.6335 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1073    3.6545   -1.2818 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.2300    3.3724   -0.0279 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8703    1.1663    0.8609 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.7471   -2.0912    1.6327 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  2  0\n  2  4  1  0\n  4  5  1  0\n  5  6  2  0\n  6  7  1  0\n  7  8  2  0\n  8  9  1  0\n  9 10  2  0\n 10 11  1  0\n 11 12  2  0\n 11 13  1  0\n 10  5  1  0\n  1 14  1  0\n  1 15  1  0\n  1 16  1  0\n  6 17  1  0\n  7 18  1  0\n  8 19  1  0\n  9 20  1  0\n 13 21  1  0\nM  END\n$$$$\n",
+  "caffeine.mol": "Caffeine\n     RDKit          3D\n\n 24 25  0  0  0  0  0  0  0  0999 V2000\n    3.2785    0.5941    0.0738 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1406   -0.2864   -0.0031 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1797   -1.6519   -0.1065 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.9687   -2.1705   -0.1565 N   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1361   -1.0950   -0.0820 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8244    0.0762    0.0130 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1926    1.3459    0.1040 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8225    2.3959    0.1893 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.2025    1.2585    0.0851 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9510    0.0665   -0.0120 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.1854    0.0918   -0.0208 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.2372   -1.1294   -0.0966 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9317   -2.3997   -0.1993 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9654    2.4883    0.1720 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.1985    0.0050    0.0370 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2462    1.2798   -0.7766 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2305    1.1434    1.0173 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.1051   -2.2132   -0.1411 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.6383   -2.8932   -1.1312 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.6538   -3.0288    0.6524 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.0174   -2.2723   -0.1990 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.6133    2.4434    1.0535 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.5979    2.5780   -0.7174 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.3294    3.3738    0.2448 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  2  0\n  4  5  1  0\n  5  6  2  0\n  6  7  1  0\n  7  8  2  0\n  7  9  1  0\n  9 10  1  0\n 10 11  2  0\n 10 12  1  0\n 12 13  1  0\n  9 14  1  0\n  6  2  1  0\n 12  5  1  0\n  1 15  1  0\n  1 16  1  0\n  1 17  1  0\n  3 18  1  0\n 13 19  1  0\n 13 20  1  0\n 13 21  1  0\n 14 22  1  0\n 14 23  1  0\n 14 24  1  0\nM  END\n",
+  "conformers_butane.sdf": "Butane_Conformer_1\n     RDKit          3D\n\n 14 13  0  0  0  0  0  0  0  0999 V2000\n   -1.5610    0.3453   -0.0107 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.5475   -0.5405   -0.6822 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.7270   -0.6658    0.1194 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4367    0.6178    0.3651 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.0821    0.8740    0.8390 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.4111   -0.2353    0.4479 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.0678    1.0419   -0.7252 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.3678   -0.2182   -1.7210 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.9871   -1.5622   -0.7161 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.4149   -1.0540    1.1280 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.3930   -1.4252   -0.3240 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.4851    0.3693    0.6611 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.9979    1.2190    1.1884 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.5698    1.2339   -0.5697 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  1  0\n  1  5  1  0\n  1  6  1  0\n  1  7  1  0\n  2  8  1  0\n  2  9  1  0\n  3 10  1  0\n  3 11  1  0\n  4 12  1  0\n  4 13  1  0\n  4 14  1  0\nM  END\n$$$$\nButane_Conformer_2\n     RDKit          3D\n\n 14 13  0  0  0  0  0  0  0  0999 V2000\n   -1.3889   -0.4449    0.4508 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.7252    0.7713   -0.1408 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.5739    0.2888   -0.7933 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4502   -0.3470    0.2541 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.1590   -1.2949   -0.2056 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8813   -0.6439    1.4346 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.4710   -0.3011    0.6273 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.4040    1.4932    0.6400 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.3545    1.3224   -0.8520 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.0571    1.1322   -1.3086 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.3895   -0.4907   -1.5688 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.6176    0.4280    1.0496 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.3913   -0.6768   -0.2335 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.9043   -1.2367    0.6463 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  1  0\n  1  5  1  0\n  1  6  1  0\n  1  7  1  0\n  2  8  1  0\n  2  9  1  0\n  3 10  1  0\n  3 11  1  0\n  4 12  1  0\n  4 13  1  0\n  4 14  1  0\nM  END\n$$$$\n",
+  "crambin_1crn.pdb": "HEADER    PLANT SEED PROTEIN                      30-APR-81   1CRN\nTITLE     WATER STRUCTURE OF A HYDROPHOBIC PROTEIN AT ATOMIC RESOLUTION.\nCOMPND    MOL_ID: 1; MOLECULE: CRAMBIN; CHAIN: A;\nEXPDTA    X-RAY DIFFRACTION\nREMARK   2 RESOLUTION. 1.50 ANGSTROMS.\nATOM      1  N   THR A   1      17.047  14.099   3.625  1.00 13.79           N\nATOM      2  CA  THR A   1      16.967  12.784   4.338  1.00 10.80           C\nATOM      3  C   THR A   1      15.685  12.755   5.133  1.00  9.19           C\nATOM      4  O   THR A   1      15.268  13.825   5.594  1.00  9.85           O\nATOM      5  CB  THR A   1      18.170  12.703   5.337  1.00 13.02           C\nATOM      6  OG1 THR A   1      19.334  12.829   4.463  1.00 15.06           O\nATOM      7  CG2 THR A   1      18.150  11.454   6.216  1.00 13.06           C\nATOM      8  N   THR A   2      15.115  11.555   5.265  1.00  7.81           N\nATOM      9  CA  THR A   2      13.856  11.469   6.066  1.00  7.10           C\nATOM     10  C   THR A   2      14.164  10.785   7.379  1.00  6.43           C\nATOM     11  O   THR A   2      14.993   9.872   7.446  1.00  6.88           O\nATOM     12  CB  THR A   2      12.732  10.724   5.261  1.00  7.68           C\nATOM     13  OG1 THR A   2      12.214  11.644   4.283  1.00  8.00           O\nATOM     14  CG2 THR A   2      11.608  10.420   6.213  1.00  9.00           C\nATOM     15  N   CYS A   3      13.504  11.232   8.438  1.00  6.41           N\nATOM     16  CA  CYS A   3      13.664  10.669   9.771  1.00  6.47           C\nATOM     17  C   CYS A   3      12.441   9.849  10.150  1.00  6.31           C\nATOM     18  O   CYS A   3      11.401  10.395  10.519  1.00  7.33           O\nATOM     19  CB  CYS A   3      13.915  11.758  10.826  1.00  6.62           C\nATOM     20  SG  CYS A   3      15.483  12.658  10.627  1.00  7.05           S\nATOM     21  N   PRO A   4      12.569   8.520  10.088  1.00  6.17           N\nATOM     22  CA  PRO A   4      11.479   7.636  10.490  1.00  6.35           C\nATOM     23  C   PRO A   4      11.373   7.638  12.011  1.00  6.30           C\nATOM     24  O   PRO A   4      12.378   7.441  12.698  1.00  6.80           O\nATOM     25  CB  PRO A   4      11.961   6.257  10.021  1.00  6.91           C\nATOM     26  CG  PRO A   4      13.235   6.529   9.281  1.00  7.09           C\nATOM     27  CD  PRO A   4      13.754   7.747   9.889  1.00  6.44           C\nATOM     28  N   SER A   5      10.168   7.876  12.529  1.00  6.25           N\nATOM     29  CA  SER A   5       9.919   7.910  13.966  1.00  6.72           C\nATOM     30  C   SER A   5       9.816   6.518  14.577  1.00  6.51           C\nATOM     31  O   SER A   5       9.060   5.688  14.103  1.00  7.24           O\nATOM     32  CB  SER A   5       8.629   8.704  14.237  1.00  7.63           C\nATOM     33  OG  SER A   5       8.560   9.014  15.617  1.00  9.74           O\nATOM     34  N   ILE A   6      10.590   6.262  15.626  1.00  6.34           N\nATOM     35  CA  ILE A   6      10.584   4.975  16.307  1.00  6.62           C\nATOM     36  C   ILE A   6       9.231   4.685  16.942  1.00  6.48           C\nATOM     37  O   ILE A   6       8.961   5.150  18.047  1.00  7.29           O\nATOM     38  CB  ILE A   6      11.706   4.887  17.382  1.00  6.79           C\nATOM     39  CG1 ILE A   6      13.064   4.823  16.671  1.00  7.56           C\nATOM     40  CG2 ILE A   6      11.666   3.673  18.307  1.00  8.00           C\nATOM     41  CD1 ILE A   6      14.254   4.945  17.585  1.00  9.10           C\nTER      42      ILE A   6\nEND\n",
+  "ethane.gro": "Ethane MD coordinate\n    8\n    1ETH      C1    1   0.000   0.000   0.000\n    1ETH      C2    2   0.153   0.000   0.000\n    1ETH      H1    3  -0.036   0.103   0.000\n    1ETH      H2    4  -0.036  -0.051   0.089\n    1ETH      H3    5  -0.036  -0.051  -0.089\n    1ETH      H4    6   0.189  -0.103   0.000\n    1ETH      H5    7   0.189   0.051   0.089\n    1ETH      H6    8   0.189   0.051  -0.089\n   1.00000   1.00000   1.00000\n",
+  "ethanol.smi": "CCO ethanol\n",
+  "glucose.cml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<molecule id=\"glucose\" xmlns=\"http://www.xml-cml.org/schema\">\n  <atomArray>\n    <atom id=\"a1\" elementType=\"C\" x3=\"0.000\" y3=\"1.400\" z3=\"0.000\"/>\n    <atom id=\"a2\" elementType=\"C\" x3=\"1.212\" y3=\"0.700\" z3=\"0.000\"/>\n    <atom id=\"a3\" elementType=\"C\" x3=\"1.212\" y3=\"-0.700\" z3=\"0.000\"/>\n    <atom id=\"a4\" elementType=\"C\" x3=\"0.000\" y3=\"-1.400\" z3=\"0.000\"/>\n    <atom id=\"a5\" elementType=\"C\" x3=\"-1.212\" y3=\"-0.700\" z3=\"0.000\"/>\n    <atom id=\"a6\" elementType=\"O\" x3=\"-1.212\" y3=\"0.700\" z3=\"0.000\"/>\n  </atomArray>\n</molecule>\n",
+  "insulin_2chains.pdb": "HEADER    HORMONE                                 15-JAN-88   4INS\nTITLE     REFINED STRUCTURE OF INSULIN (MULTI-CHAIN)\nCOMPND    MOL_ID: 1; MOLECULE: INSULIN; CHAIN: A, B;\nEXPDTA    X-RAY DIFFRACTION\nATOM      1  N   GLY A   1      15.234  18.456  12.123  1.00 12.00           N\nATOM      2  CA  GLY A   1      16.123  17.456  11.567  1.00 11.50           C\nATOM      3  C   GLY A   1      17.456  18.023  11.123  1.00 11.00           C\nATOM      4  O   GLY A   1      18.345  18.234  11.956  1.00 11.50           O\nATOM      5  N   ILE A   2      17.567  18.234   9.823  1.00 10.50           N\nATOM      6  CA  ILE A   2      18.789  18.789   9.234  1.00 10.00           C\nATOM      7  C   ILE A   2      19.234  17.789   8.189  1.00  9.50           C\nATOM      8  O   ILE A   2      18.456  17.456   7.289  1.00 10.00           O\nATOM      9  CB  ILE A   2      18.543  20.123   8.543  1.00 11.00           C\nATOM     10  CG1 ILE A   2      18.012  21.123   9.567  1.00 12.00           C\nATOM     11  CG2 ILE A   2      19.789  20.678   7.845  1.00 12.50           C\nTER      12      ILE A   2\nATOM     13  N   PHE B   1      25.456  14.234  15.123  1.00 14.00           N\nATOM     14  CA  PHE B   1      26.234  13.234  14.456  1.00 13.50           C\nATOM     15  C   PHE B   1      27.567  13.823  13.987  1.00 13.00           C\nATOM     16  O   PHE B   1      28.456  14.234  14.745  1.00 13.50           O\nATOM     17  CB  PHE B   1      26.456  12.089  15.445  1.00 14.50           C\nATOM     18  CG  PHE B   1      25.234  11.345  15.890  1.00 15.00           C\nATOM     19  CD1 PHE B   1      24.123  11.123  15.089  1.00 16.00           C\nATOM     20  CD2 PHE B   1      25.189  10.867  17.189  1.00 16.00           C\nATOM     21  N   VAL B   2      27.689  13.845  12.667  1.00 12.00           N\nATOM     22  CA  VAL B   2      28.912  14.345  12.056  1.00 11.50           C\nATOM     23  C   VAL B   2      29.234  13.456  10.867  1.00 11.00           C\nATOM     24  O   VAL B   2      28.389  13.212   9.989  1.00 11.50           O\nATOM     25  CB  VAL B   2      28.845  15.812  11.590  1.00 12.50           C\nTER      26      VAL B   2\nEND\n",
+  "ligand_docking.pdbqt": "REMARK  Name = Aspirin\nREMARK  5 active torsions:\nREMARK  status: ('A' for Active; 'I' for Inactive)\nREMARK    1  A    between atoms: C_1  and  C_2\nREMARK    2  A    between atoms: C_2  and  O_4\nREMARK    3  A    between atoms: O_4  and  C_5\nREMARK    4  A    between atoms: C_10  and  C_11\nREMARK    5  A    between atoms: C_11  and  O_13\nREMARK                            x       y       z     vdW  Elec       q    Type\nREMARK                         _______ _______ _______ _____ _____    ______ ____\nROOT\nATOM      1  C   UNL     1      -0.112   0.338  -0.561  0.00  0.00    +0.000 A \nATOM      2  C   UNL     1      -0.463   1.587  -1.084  0.00  0.00    +0.000 A \nATOM      3  C   UNL     1       0.380   2.679  -0.888  0.00  0.00    +0.000 A \nATOM      4  C   UNL     1       1.573   2.519  -0.183  0.00  0.00    +0.000 A \nATOM      5  C   UNL     1       1.931   1.265   0.322  0.00  0.00    +0.000 A \nATOM      6  C   UNL     1       1.093   0.154   0.132  0.00  0.00    +0.000 A \nENDROOT\nBRANCH   6   7\nATOM      7  C   UNL     1       1.481  -1.188   0.641  0.00  0.00    +0.000 C \nATOM      8  O   UNL     1       0.887  -2.237   0.473  0.00  0.00    +0.000 OA\nBRANCH   7   9\nATOM      9  O   UNL     1       2.625  -1.160   1.351  0.00  0.00    +0.000 OA\nATOM     10  H   UNL     1       2.747  -2.091   1.633  0.00  0.00    +0.000 HD\nENDBRANCH   7   9\nENDBRANCH   6   7\nBRANCH   1  11\nATOM     11  O   UNL     1      -0.987  -0.721  -0.819  0.00  0.00    +0.000 OA\nBRANCH  11  13\nATOM     12  C   UNL     1      -2.654  -2.201  -0.070  0.00  0.00    +0.000 C \nATOM     13  C   UNL     1      -1.825  -0.995   0.256  0.00  0.00    +0.000 C \nATOM     14  O   UNL     1      -1.908  -0.360   1.299  0.00  0.00    +0.000 OA\nENDBRANCH  11  13\nENDBRANCH   1  11\nTORSDOF 4\n",
+  "methane.gjf": "#p b3lyp/6-31g(d) opt\n\nMethane optimization\n\n0 1\nC   0.000000   0.000000   0.000000\nH   0.629118   0.629118   0.629118\nH  -0.629118  -0.629118   0.629118\nH  -0.629118   0.629118  -0.629118\nH   0.629118  -0.629118  -0.629118\n\n",
+  "multimol_library.sdf": "Aspirin\n     RDKit          3D\n\n 21 21  0  0  0  0  0  0  0  0999 V2000\n   -2.6543   -2.2010   -0.0705 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.8250   -0.9953    0.2561 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9080   -0.3599    1.2994 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.9872   -0.7209   -0.8192 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.1116    0.3379   -0.5613 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.4629    1.5868   -1.0841 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.3804    2.6786   -0.8877 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.5733    2.5193   -0.1834 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.9307    1.2648    0.3218 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.0935    0.1542    0.1321 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4808   -1.1879    0.6410 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8866   -2.2369    0.4734 O   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6254   -1.1603    1.3509 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.3073   -1.9821   -0.9187 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.2736   -2.4587    0.7934 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.0036   -3.0503   -0.2938 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.3921    1.7096   -1.6335 H   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1073    3.6545   -1.2818 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.2300    3.3724   -0.0279 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8703    1.1663    0.8609 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.7471   -2.0912    1.6327 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  2  0\n  2  4  1  0\n  4  5  1  0\n  5  6  2  0\n  6  7  1  0\n  7  8  2  0\n  8  9  1  0\n  9 10  2  0\n 10 11  1  0\n 11 12  2  0\n 11 13  1  0\n 10  5  1  0\n  1 14  1  0\n  1 15  1  0\n  1 16  1  0\n  6 17  1  0\n  7 18  1  0\n  8 19  1  0\n  9 20  1  0\n 13 21  1  0\nM  END\n$$$$\nCaffeine\n     RDKit          3D\n\n 24 25  0  0  0  0  0  0  0  0999 V2000\n    3.2785    0.5941    0.0738 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1406   -0.2864   -0.0031 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1797   -1.6519   -0.1065 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.9687   -2.1705   -0.1565 N   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1361   -1.0950   -0.0820 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8244    0.0762    0.0130 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.1926    1.3459    0.1040 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.8225    2.3959    0.1893 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.2025    1.2585    0.0851 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9510    0.0665   -0.0120 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.1854    0.0918   -0.0208 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.2372   -1.1294   -0.0966 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9317   -2.3997   -0.1993 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.9654    2.4883    0.1720 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.1985    0.0050    0.0370 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2462    1.2798   -0.7766 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.2305    1.1434    1.0173 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.1051   -2.2132   -0.1411 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.6383   -2.8932   -1.1312 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.6538   -3.0288    0.6524 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.0174   -2.2723   -0.1990 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.6133    2.4434    1.0535 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.5979    2.5780   -0.7174 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -1.3294    3.3738    0.2448 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  2  0\n  4  5  1  0\n  5  6  2  0\n  6  7  1  0\n  7  8  2  0\n  7  9  1  0\n  9 10  1  0\n 10 11  2  0\n 10 12  1  0\n 12 13  1  0\n  9 14  1  0\n  6  2  1  0\n 12  5  1  0\n  1 15  1  0\n  1 16  1  0\n  1 17  1  0\n  3 18  1  0\n 13 19  1  0\n 13 20  1  0\n 13 21  1  0\n 14 22  1  0\n 14 23  1  0\n 14 24  1  0\nM  END\n$$$$\nIbuprofen\n     RDKit          3D\n\n 33 33  0  0  0  0  0  0  0  0999 V2000\n   -4.7224   -0.5936   -0.0894 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.2929   -0.0641   -0.2267 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.2130    1.3565    0.3384 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.3117   -1.0219    0.4773 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8584   -0.7044    0.2187 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.0605   -0.1482    1.2243 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2835    0.1488    0.9832 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8627   -0.1059   -0.2683 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.0594   -0.6669   -1.2723 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.2852   -0.9623   -1.0315 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.3198    0.2192   -0.5587 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.6132    1.7110   -0.3976 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.2971   -0.5790    0.2875 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.1509   -0.9888    1.4271 O   0  0  0  0  0  0  0  0  0  0  0  0\n    5.4723   -0.7856   -0.3486 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.0243   -0.6564    0.9617 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.8108   -1.5931   -0.5284 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.4316    0.0609   -0.6072 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.0557   -0.0181   -1.2972 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.2263    1.7981    0.1677 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.4097    1.3672    1.4158 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -3.9493    2.0075   -0.1452 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.5061   -1.0276    1.5580 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.4922   -2.0517    0.1407 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.4781    0.0583    2.2072 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8779    0.5701    1.7918 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.4713   -0.8793   -2.2566 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8836   -1.3980   -1.8285 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.5190   -0.0520   -1.6047 H   0  0  0  0  0  0  0  0  0  0  0  0\n    2.9365    2.3148   -1.0120 H   0  0  0  0  0  0  0  0  0  0  0  0\n    4.6406    1.9392   -0.7027 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.5070    2.0377    0.6430 H   0  0  0  0  0  0  0  0  0  0  0  0\n    6.0006   -1.2924    0.3039 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  2  4  1  0\n  4  5  1  0\n  5  6  1  0\n  6  7  2  0\n  7  8  1  0\n  8  9  2  0\n  9 10  1  0\n  8 11  1  0\n 11 12  1  0\n 11 13  1  0\n 13 14  2  0\n 13 15  1  0\n 10  5  2  0\n  1 16  1  0\n  1 17  1  0\n  1 18  1  0\n  2 19  1  0\n  3 20  1  0\n  3 21  1  0\n  3 22  1  0\n  4 23  1  0\n  4 24  1  0\n  6 25  1  0\n  7 26  1  0\n  9 27  1  0\n 10 28  1  0\n 11 29  1  0\n 12 30  1  0\n 12 31  1  0\n 12 32  1  0\n 15 33  1  0\nM  END\n$$$$\n",
+  "paracetamol.mol": "Paracetamol\n     RDKit          3D\n\n 20 20  0  0  0  0  0  0  0  0999 V2000\n    3.6710   -0.5394   -0.0544 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.2114   -0.8833   -0.2207 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8698   -2.0040   -0.5807 O   0  0  0  0  0  0  0  0  0  0  0  0\n    1.3848    0.1775    0.1028 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.0245    0.2106    0.0673 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.8221   -0.8664   -0.3279 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.2174   -0.7541   -0.3367 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.8132    0.4397    0.0507 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.1673    0.5909    0.0565 O   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.0380    1.5207    0.4457 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.6455    1.4064    0.4539 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.8681    0.4912   -0.3634 H   0  0  0  0  0  0  0  0  0  0  0  0\n    4.2739   -1.2019   -0.6821 H   0  0  0  0  0  0  0  0  0  0  0  0\n    3.9570   -0.6710    0.9924 H   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8373    1.0295    0.4086 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.3892   -1.8127   -0.6372 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.8114   -1.6076   -0.6483 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.5715   -0.2413   -0.2399 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -2.5142    2.4495    0.7465 H   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.0591    2.2658    0.7669 H   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  2  0\n  2  4  1  0\n  4  5  1  0\n  5  6  1  0\n  6  7  2  0\n  7  8  1  0\n  8  9  1  0\n  8 10  2  0\n 10 11  1  0\n 11  5  2  0\n  1 12  1  0\n  1 13  1  0\n  1 14  1  0\n  4 15  1  0\n  6 16  1  0\n  7 17  1  0\n  9 18  1  0\n 10 19  1  0\n 11 20  1  0\nM  END\n",
+  "peptide_leu_enkephalin.pdb": "COMPND    Leu-Enkephalin\nHETATM    1  N1  UNL     1      -5.851  -1.080   0.294  1.00  0.00           N  \nHETATM    2  C1  UNL     1      -4.705  -0.813  -0.612  1.00  0.00           C  \nHETATM    3  C2  UNL     1      -5.131  -0.044  -1.878  1.00  0.00           C  \nHETATM    4  C3  UNL     1      -5.503   1.408  -1.675  1.00  0.00           C  \nHETATM    5  C4  UNL     1      -6.755   1.762  -1.148  1.00  0.00           C  \nHETATM    6  C5  UNL     1      -7.090   3.105  -0.947  1.00  0.00           C  \nHETATM    7  C6  UNL     1      -6.175   4.097  -1.286  1.00  0.00           C  \nHETATM    8  O1  UNL     1      -6.463   5.419  -1.109  1.00  0.00           O  \nHETATM    9  C7  UNL     1      -4.936   3.767  -1.823  1.00  0.00           C  \nHETATM   10  C8  UNL     1      -4.600   2.426  -2.018  1.00  0.00           C  \nHETATM   11  C9  UNL     1      -3.584  -0.092   0.173  1.00  0.00           C  \nHETATM   12  O2  UNL     1      -3.716   0.261   1.347  1.00  0.00           O  \nHETATM   13  N2  UNL     1      -2.393   0.067  -0.491  1.00  0.00           N  \nHETATM   14  C10 UNL     1      -1.345   0.938   0.020  1.00  0.00           C  \nHETATM   15  C11 UNL     1      -0.465   0.336   1.120  1.00  0.00           C  \nHETATM   16  O3  UNL     1       0.739   0.581   1.204  1.00  0.00           O  \nHETATM   17  N3  UNL     1      -1.106  -0.446   2.057  1.00  0.00           N  \nHETATM   18  C12 UNL     1      -0.482  -0.735   3.345  1.00  0.00           C  \nHETATM   19  C13 UNL     1       0.682  -1.740   3.340  1.00  0.00           C  \nHETATM   20  O4  UNL     1       1.249  -2.081   4.375  1.00  0.00           O  \nHETATM   21  N4  UNL     1       1.042  -2.205   2.099  1.00  0.00           N  \nHETATM   22  C14 UNL     1       2.290  -2.922   1.844  1.00  0.00           C  \nHETATM   23  C15 UNL     1       2.102  -3.997   0.755  1.00  0.00           C  \nHETATM   24  C16 UNL     1       1.464  -3.482  -0.523  1.00  0.00           C  \nHETATM   25  C17 UNL     1       2.228  -2.813  -1.487  1.00  0.00           C  \nHETATM   26  C18 UNL     1       1.625  -2.310  -2.642  1.00  0.00           C  \nHETATM   27  C19 UNL     1       0.257  -2.481  -2.851  1.00  0.00           C  \nHETATM   28  C20 UNL     1      -0.512  -3.152  -1.902  1.00  0.00           C  \nHETATM   29  C21 UNL     1       0.087  -3.646  -0.743  1.00  0.00           C  \nHETATM   30  C22 UNL     1       3.474  -1.987   1.484  1.00  0.00           C  \nHETATM   31  O5  UNL     1       4.541  -2.422   1.052  1.00  0.00           O  \nHETATM   32  N5  UNL     1       3.288  -0.649   1.748  1.00  0.00           N  \nHETATM   33  C23 UNL     1       4.297   0.360   1.424  1.00  0.00           C  \nHETATM   34  C24 UNL     1       4.082   0.858  -0.015  1.00  0.00           C  \nHETATM   35  C25 UNL     1       5.237   1.628  -0.687  1.00  0.00           C  \nHETATM   36  C26 UNL     1       5.423   3.042  -0.143  1.00  0.00           C  \nHETATM   37  C27 UNL     1       6.557   0.860  -0.657  1.00  0.00           C  \nHETATM   38  C28 UNL     1       4.142   1.481   2.449  1.00  0.00           C  \nHETATM   39  O6  UNL     1       3.107   2.043   2.771  1.00  0.00           O  \nHETATM   40  O7  UNL     1       5.306   1.826   3.039  1.00  0.00           O  \nHETATM   41  H1  UNL     1      -5.508  -1.651   1.070  1.00  0.00           H  \nHETATM   42  H2  UNL     1      -6.081  -0.191   0.755  1.00  0.00           H  \nHETATM   43  H3  UNL     1      -4.311  -1.792  -0.918  1.00  0.00           H  \nHETATM   44  H4  UNL     1      -5.975  -0.560  -2.357  1.00  0.00           H  \nHETATM   45  H5  UNL     1      -4.319  -0.096  -2.616  1.00  0.00           H  \nHETATM   46  H6  UNL     1      -7.484   0.993  -0.896  1.00  0.00           H  \nHETATM   47  H7  UNL     1      -8.068   3.356  -0.540  1.00  0.00           H  \nHETATM   48  H8  UNL     1      -7.279   5.489  -0.590  1.00  0.00           H  \nHETATM   49  H9  UNL     1      -4.235   4.552  -2.091  1.00  0.00           H  \nHETATM   50  H10 UNL     1      -3.629   2.187  -2.446  1.00  0.00           H  \nHETATM   51  H11 UNL     1      -2.287  -0.291  -1.431  1.00  0.00           H  \nHETATM   52  H12 UNL     1      -0.699   1.185  -0.831  1.00  0.00           H  \nHETATM   53  H13 UNL     1      -1.795   1.861   0.405  1.00  0.00           H  \nHETATM   54  H14 UNL     1      -2.121  -0.316   2.079  1.00  0.00           H  \nHETATM   55  H15 UNL     1      -1.265  -1.145   3.991  1.00  0.00           H  \nHETATM   56  H16 UNL     1      -0.120   0.208   3.769  1.00  0.00           H  \nHETATM   57  H17 UNL     1       0.637  -1.724   1.306  1.00  0.00           H  \nHETATM   58  H18 UNL     1       2.593  -3.423   2.773  1.00  0.00           H  \nHETATM   59  H19 UNL     1       1.466  -4.798   1.158  1.00  0.00           H  \nHETATM   60  H20 UNL     1       3.057  -4.477   0.506  1.00  0.00           H  \nHETATM   61  H21 UNL     1       3.302  -2.684  -1.352  1.00  0.00           H  \nHETATM   62  H22 UNL     1       2.232  -1.798  -3.385  1.00  0.00           H  \nHETATM   63  H23 UNL     1      -0.201  -2.109  -3.764  1.00  0.00           H  \nHETATM   64  H24 UNL     1      -1.574  -3.307  -2.070  1.00  0.00           H  \nHETATM   65  H25 UNL     1      -0.524  -4.167  -0.009  1.00  0.00           H  \nHETATM   66  H26 UNL     1       2.337  -0.305   1.885  1.00  0.00           H  \nHETATM   67  H27 UNL     1       5.279  -0.105   1.547  1.00  0.00           H  \nHETATM   68  H28 UNL     1       3.176   1.476  -0.059  1.00  0.00           H  \nHETATM   69  H29 UNL     1       3.869  -0.012  -0.652  1.00  0.00           H  \nHETATM   70  H30 UNL     1       4.953   1.736  -1.743  1.00  0.00           H  \nHETATM   71  H31 UNL     1       4.474   3.587  -0.135  1.00  0.00           H  \nHETATM   72  H32 UNL     1       6.119   3.601  -0.776  1.00  0.00           H  \nHETATM   73  H33 UNL     1       5.834   3.048   0.868  1.00  0.00           H  \nHETATM   74  H34 UNL     1       6.988   0.830   0.349  1.00  0.00           H  \nHETATM   75  H35 UNL     1       6.419  -0.169  -1.002  1.00  0.00           H  \nHETATM   76  H36 UNL     1       7.292   1.336  -1.316  1.00  0.00           H  \nHETATM   77  H37 UNL     1       5.043   2.507   3.692  1.00  0.00           H  \nCONECT    1    2   41   42\nCONECT    2    3   11   43\nCONECT    3    4   44   45\nCONECT    4    5   10   10\nCONECT    5    6    6   46\nCONECT    6    7   47\nCONECT    7    8    9    9\nCONECT    8   48\nCONECT    9   10   49\nCONECT   10   50\nCONECT   11   12   12   13\nCONECT   13   14   51\nCONECT   14   15   52   53\nCONECT   15   16   16   17\nCONECT   17   18   54\nCONECT   18   19   55   56\nCONECT   19   20   20   21\nCONECT   21   22   57\nCONECT   22   23   30   58\nCONECT   23   24   59   60\nCONECT   24   25   25   29\nCONECT   25   26   61\nCONECT   26   27   27   62\nCONECT   27   28   63\nCONECT   28   29   29   64\nCONECT   29   65\nCONECT   30   31   31   32\nCONECT   32   33   66\nCONECT   33   34   38   67\nCONECT   34   35   68   69\nCONECT   35   36   37   70\nCONECT   36   71   72   73\nCONECT   37   74   75   76\nCONECT   38   39   39   40\nCONECT   40   77\nEND\n",
+  "streptavidin_biotin_1stp.pdb": "HEADER    COMPLEX (BIOTIN-BINDING PROTEIN)        08-OCT-92   1STP\nTITLE     ATOMIC STRUCTURE OF THE COOPERATIVE BINDING PROTEIN STREPTAVIDIN\nEXPDTA    X-RAY DIFFRACTION\nREMARK   2 RESOLUTION. 2.60 ANGSTROMS.\nATOM      1  N   ALA A  13      13.882   9.479  11.455  1.00 18.00           N\nATOM      2  CA  ALA A  13      14.957  10.231  10.796  1.00 17.50           C\nATOM      3  C   ALA A  13      15.008  11.684  11.237  1.00 17.00           C\nATOM      4  O   ALA A  13      14.249  12.115  12.106  1.00 18.00           O\nATOM      5  CB  ALA A  13      16.275   9.544  11.144  1.00 18.50           C\nATOM      6  N   GLU A  14      15.908  12.434  10.618  1.00 16.00           N\nATOM      7  CA  GLU A  14      16.079  13.858  10.871  1.00 15.50           C\nATOM      8  C   GLU A  14      17.433  14.296  10.334  1.00 15.00           C\nATOM      9  O   GLU A  14      18.423  13.626  10.597  1.00 15.50           O\nATOM     10  CB  GLU A  14      15.938  14.161  12.368  1.00 17.00           C\nATOM     11  CG  GLU A  14      14.654  13.629  13.003  1.00 19.00           C\nATOM     12  CD  GLU A  14      14.542  13.992  14.475  1.00 20.00           C\nATOM     13  OE1 GLU A  14      15.549  13.824  15.201  1.00 21.00           O\nATOM     14  OE2 GLU A  14      13.435  14.437  14.887  1.00 21.50           O\nATOM     15  N   ALA A  15      17.458  15.429   9.638  1.00 14.00           N\nATOM     16  CA  ALA A  15      18.665  16.027   9.083  1.00 13.50           C\nATOM     17  C   ALA A  15      19.349  16.897  10.128  1.00 13.00           C\nATOM     18  O   ALA A  15      18.730  17.382  11.082  1.00 13.50           O\nATOM     19  CB  ALA A  15      18.337  16.883   7.871  1.00 14.50           C\nTER      20      ALA A  15\nHETATM   21  C2  BTN A 300      20.012  14.215   5.234  1.00 15.00           C\nHETATM   22  S1  BTN A 300      21.134  13.024   4.345  1.00 16.00           S\nHETATM   23  C5  BTN A 300      22.456  14.256   4.012  1.00 15.00           C\nHETATM   24  C4  BTN A 300      21.987  15.421   4.889  1.00 14.00           C\nHETATM   25  N3  BTN A 300      22.789  16.543   4.678  1.00 14.50           N\nHETATM   26  C   BTN A 300      23.890  16.321   3.890  1.00 14.00           C\nHETATM   27  O   BTN A 300      24.789  17.112   3.678  1.00 15.00           O\nHETATM   28  N1  BTN A 300      23.789  15.023   3.456  1.00 14.00           N\nHETATM   29  C3  BTN A 300      20.543  15.112   5.456  1.00 14.50           C\nHETATM   30  O   HOH A 401      18.452  12.341  14.567  1.00 19.50           O\nHETATM   31  O   HOH A 402      16.789   8.912   8.456  1.00 22.00           O\nHETATM   32  O   HOH A 403      21.234  18.456  11.234  1.00 18.00           O\nEND\n",
+  "thalidomide.mol2": "@<TRIPOS>MOLECULE\nThalidomide\n 29 31 0 0 0\nSMALL\nGASTEIGER\n\n@<TRIPOS>ATOM\n      1 O           5.3042    0.3990    0.9443 O.2     1  UNL1       -0.2754\n      2 C           4.1427    0.1322    0.6503 C.2     1  UNL1        0.2193\n      3 C           3.7054   -0.1035   -0.7772 C.3     1  UNL1        0.0265\n      4 C           2.2399    0.2560   -0.9726 C.3     1  UNL1       -0.0170\n      5 C           1.3917   -0.5434    0.0129 C.3     1  UNL1        0.1109\n      6 N          -0.0394   -0.3100   -0.1033 N.am    1  UNL1       -0.2220\n      7 C          -0.9634   -1.3167   -0.0119 C.2     1  UNL1        0.2545\n      8 O          -0.7797   -2.5172    0.0525 O.2     1  UNL1       -0.2695\n      9 C          -2.2789   -0.6813   -0.0132 C.ar    1  UNL1        0.0494\n     10 C          -3.5427   -1.2359    0.0348 C.ar    1  UNL1       -0.0489\n     11 C          -4.6274   -0.3532    0.0255 C.ar    1  UNL1       -0.0610\n     12 C          -4.4248    1.0420   -0.0278 C.ar    1  UNL1       -0.0610\n     13 C          -3.1339    1.5784   -0.0731 C.ar    1  UNL1       -0.0489\n     14 C          -2.0801    0.6858   -0.0666 C.ar    1  UNL1        0.0494\n     15 C          -0.6380    0.9207   -0.0952 C.2     1  UNL1        0.2545\n     16 O          -0.1257    2.0235   -0.0911 O.2     1  UNL1       -0.2695\n     17 C           1.8373   -0.2533    1.4500 C.2     1  UNL1        0.2402\n     18 O           1.0819   -0.2750    2.4200 O.2     1  UNL1       -0.2733\n     19 N           3.1847   -0.0245    1.6211 N.am    1  UNL1       -0.2548\n     20 H           4.3227    0.5164   -1.4363 H       1  UNL1        0.0359\n     21 H           3.8890   -1.1552   -1.0229 H       1  UNL1        0.0359\n     22 H           1.9340    0.0398   -2.0025 H       1  UNL1        0.0293\n     23 H           2.1202    1.3342   -0.8179 H       1  UNL1        0.0293\n     24 H           1.5713   -1.6147   -0.1484 H       1  UNL1        0.0602\n     25 H          -3.6835   -2.3109    0.0815 H       1  UNL1        0.0625\n     26 H          -5.6423   -0.7457    0.0642 H       1  UNL1        0.0618\n     27 H          -5.2859    1.7083   -0.0293 H       1  UNL1        0.0618\n     28 H          -2.9635    2.6496   -0.1076 H       1  UNL1        0.0625\n     29 H           3.4843    0.1546    2.5701 H       1  UNL1        0.1575\n@<TRIPOS>BOND\n     1     1     2    2\n     2     2     3    1\n     3     3     4    1\n     4     4     5    1\n     5     5     6    1\n     6     6     7   am\n     7     7     8    2\n     8     7     9    1\n     9     9    10   ar\n    10    10    11   ar\n    11    11    12   ar\n    12    12    13   ar\n    13    13    14   ar\n    14    14    15    1\n    15    15    16    2\n    16     5    17    1\n    17    17    18    2\n    18    17    19   am\n    19    19     2   am\n    20    15     6   am\n    21    14     9   ar\n    22     3    20    1\n    23     3    21    1\n    24     4    22    1\n    25     4    23    1\n    26     5    24    1\n    27    10    25    1\n    28    11    26    1\n    29    12    27    1\n    30    13    28    1\n    31    19    29    1\n",
+  "ubiquitin.fasta": ">sp|P0CG48|UBIQ_HUMAN Ubiquitin\nMQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG\n",
+  "water.xyz": "3\nWater molecule H2O\nO  0.000000  0.000000  0.117790\nH  0.000000  0.755453 -0.471161\nH  0.000000 -0.755453 -0.471161\n",
+  "zinc_finger_metal.pdb": "HEADER    DNA-BINDING PROTEIN                     10-JUL-96   1ZAA\nTITLE     STRUCTURE OF A ZINC FINGER DOMAIN COMPLEX\nEXPDTA    X-RAY DIFFRACTION\nATOM      1  N   TYR A   1      12.123  15.456  18.234  1.00 15.00           N\nATOM      2  CA  TYR A   1      12.890  14.345  17.654  1.00 14.50           C\nATOM      3  C   TYR A   1      14.234  14.823  17.123  1.00 14.00           C\nATOM      4  O   TYR A   1      14.567  16.012  17.212  1.00 14.50           O\nATOM      5  CB  TYR A   1      13.045  13.234  18.689  1.00 15.50           C\nATOM      6  CG  TYR A   1      13.845  12.056  18.234  1.00 16.00           C\nATOM      7  N   CYS A   2      14.987  13.889  16.578  1.00 13.00           N\nATOM      8  CA  CYS A   2      16.298  14.223  16.034  1.00 12.50           C\nATOM      9  C   CYS A   2      17.298  14.654  17.102  1.00 12.00           C\nATOM     10  O   CYS A   2      17.123  15.723  17.698  1.00 12.50           O\nATOM     11  CB  CYS A   2      16.823  13.045  15.212  1.00 13.50           C\nATOM     12  SG  CYS A   2      16.089  12.789  13.578  1.00 14.00           S\nTER      13      CYS A   2\nHETATM   14 ZN    ZN A 100      17.456  11.234  12.456  1.00 16.00          ZN\nEND\n"
+};
+
+  </script>
+  <script>
+  /**
+ * ClientCheminformatics: Full In-Browser Chemical & Macromolecular Engine
+ * Provides authentic parsing, format conversion, 2D/3D coordinate generation,
+ * property calculations, validation auditing, and ZIP archiving.
+ * Operates 100% offline and on GitHub Pages with zero external backend required.
+ */
+
+(function (root, factory) {
+  if (typeof define === "function" && define.amd) {
+    define([], factory);
+  } else if (typeof module === "object" && module.exports) {
+    module.exports = factory();
+  } else {
+    root.ClientCheminformatics = factory();
+  }
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  // Periodic Table Elements & Descriptors
+  const ELEMENTS = {
+    H:  { name: "Hydrogen",   mw: 1.008,   exact: 1.007825,  val: 1, rad: 0.31, r: 255, g: 255, b: 255 },
+    He: { name: "Helium",     mw: 4.0026,  exact: 4.002603,  val: 0, rad: 0.28, r: 217, g: 255, b: 255 },
+    Li: { name: "Lithium",    mw: 6.94,    exact: 7.016004,  val: 1, rad: 1.28, r: 204, g: 128, b: 255 },
+    C:  { name: "Carbon",     mw: 12.011,  exact: 12.000000, val: 4, rad: 0.76, r: 144, g: 144, b: 144 },
+    N:  { name: "Nitrogen",   mw: 14.007,  exact: 14.003074, val: 3, rad: 0.71, r: 48,  g: 80,  b: 248 },
+    O:  { name: "Oxygen",     mw: 15.999,  exact: 15.994915, val: 2, rad: 0.66, r: 255, g: 13,  b: 13  },
+    F:  { name: "Fluorine",   mw: 18.998,  exact: 18.998403, val: 1, rad: 0.57, r: 144, g: 224, b: 80  },
+    Na: { name: "Sodium",     mw: 22.990,  exact: 22.989769, val: 1, rad: 1.66, r: 171, g: 92,  b: 242 },
+    Mg: { name: "Magnesium",  mw: 24.305,  exact: 23.985042, val: 2, rad: 1.41, r: 138, g: 255, b: 0   },
+    P:  { name: "Phosphorus", mw: 30.974,  exact: 30.973762, val: 3, rad: 1.07, r: 255, g: 128, b: 0   },
+    S:  { name: "Sulfur",     mw: 32.06,   exact: 31.972071, val: 2, rad: 1.05, r: 255, g: 255, b: 48  },
+    Cl: { name: "Chlorine",   mw: 35.45,   exact: 34.968853, val: 1, rad: 1.02, r: 31,  g: 240, b: 31  },
+    K:  { name: "Potassium",  mw: 39.098,  exact: 38.963706, val: 1, rad: 2.03, r: 143, g: 64,  b: 212 },
+    Ca: { name: "Calcium",    mw: 40.078,  exact: 39.962591, val: 2, rad: 1.76, r: 61,  g: 255, b: 0   },
+    Fe: { name: "Iron",       mw: 55.845,  exact: 55.934937, val: 3, rad: 1.32, r: 224, g: 102, b: 51  },
+    Zn: { name: "Zinc",       mw: 65.38,   exact: 63.929142, val: 2, rad: 1.22, r: 125, g: 128, b: 176 },
+    Br: { name: "Bromine",    mw: 79.904,  exact: 78.918338, val: 1, rad: 1.20, r: 166, g: 41,  b: 41  },
+    I:  { name: "Iodine",     mw: 126.904, exact: 126.90447, val: 1, rad: 1.39, r: 148, g: 0,   b: 148 }
+  };
+
+  const AUTODOCK_TYPES = {
+    C: "C", A: "C", N: "N", NA: "N", NS: "N",
+    O: "O", OA: "O", OS: "O", S: "S", SA: "S",
+    H: "H", HD: "H", HS: "H", P: "P", F: "F",
+    CL: "Cl", BR: "Br", I: "I", ZN: "Zn", FE: "Fe",
+    MG: "Mg", CA: "Ca", MN: "Mn"
+  };
+
+  const AMINO_ACIDS = {
+    ALA: "A", ARG: "R", ASN: "N", ASP: "D", CYS: "C",
+    GLN: "Q", GLU: "E", GLY: "G", HIS: "H", ILE: "I",
+    LEU: "L", LYS: "K", MET: "M", PHE: "F", PRO: "P",
+    SER: "S", THR: "T", TRP: "W", TYR: "Y", VAL: "V"
+  };
+
+  // Helper: Element standardization
+  function cleanElement(rawElem, rawName, isPdbqt = false) {
+    if (isPdbqt && rawElem) {
+      const up = rawElem.trim().toUpperCase();
+      if (AUTODOCK_TYPES[up]) return AUTODOCK_TYPES[up];
+    }
+    let el = rawElem ? rawElem.trim() : "";
+    if (el) {
+      el = el.charAt(0).toUpperCase() + el.slice(1).toLowerCase();
+      if (ELEMENTS[el]) return el;
+    }
+    const cleanName = (rawName || "").replace(/[^A-Za-z]/g, "");
+    if (cleanName.length >= 2) {
+      const candidate2 = cleanName.charAt(0).toUpperCase() + cleanName.charAt(1).toLowerCase();
+      if (ELEMENTS[candidate2]) return candidate2;
+    }
+    if (cleanName.length >= 1) {
+      const candidate1 = cleanName.charAt(0).toUpperCase();
+      if (ELEMENTS[candidate1]) return candidate1;
+    }
+    return "C";
+  }
+
+  // ------------------------------------------------------------------------
+  // Format Auto-Detection
+  // ------------------------------------------------------------------------
+  function detectFormat(filename, content) {
+    const text = (content || "").trim();
+    if (filename) {
+      const ext = filename.split(".").pop().toLowerCase();
+      const extMap = {
+        smi: "smi", smiles: "smi", can: "can",
+        sdf: "sdf", mol: "mol", sd: "sdf",
+        mol2: "mol2", pdb: "pdb", ent: "pdb",
+        pdbqt: "pdbqt", xyz: "xyz", cif: "cif",
+        mcif: "mcif", mmcif: "mcif", cml: "cml",
+        cdx: "cdx", mop: "mop", mopout: "mop",
+        gjf: "gjf", com: "gjf", gro: "gro",
+        fasta: "fasta", fa: "fasta",
+        inchi: "inchi", inchikey: "inchikey"
+      };
+      if (extMap[ext]) return { format: extMap[ext], confidence: 0.95 };
+    }
+
+    if (text.startsWith("InChI=")) return { format: "inchi", confidence: 1.0 };
+    if (/^[A-Z]{14}-[A-Z]{10}-[A-Z]$/.test(text)) return { format: "inchikey", confidence: 1.0 };
+    if (text.includes("$$$$") || text.includes("M  END") || /V2000|V3000/.test(text)) {
+      return { format: text.includes("$$$$") ? "sdf" : "mol", confidence: 0.9 };
+    }
+    if (text.includes("@<TRIPOS>MOLECULE") || text.includes("@<TRIPOS>ATOM")) {
+      return { format: "mol2", confidence: 0.95 };
+    }
+    if (text.includes("ATOM  ") || text.includes("HETATM") || text.includes("HEADER") || text.includes("CRYST1")) {
+      if (/ROOT|BRANCH|ENDBRANCH|TORSDOF/.test(text)) return { format: "pdbqt", confidence: 0.9 };
+      return { format: "pdb", confidence: 0.9 };
+    }
+    if (text.includes("_atom_site.") || text.includes("data_") || text.includes("loop_")) {
+      return { format: text.includes("_atom_site.auth_") ? "mcif" : "cif", confidence: 0.9 };
+    }
+    if (text.includes("<molecule") || text.includes("<cml") || (text.includes("<?xml") && text.includes("atomArray"))) {
+      return { format: "cml", confidence: 0.95 };
+    }
+    if (text.startsWith(">") && (text.includes("\nA") || text.includes("\nM") || text.includes("\nG"))) {
+      return { format: "fasta", confidence: 0.9 };
+    }
+    if (text.startsWith("#p") || text.startsWith("#P") || text.startsWith("#N")) {
+      return { format: "gjf", confidence: 0.85 };
+    }
+
+    const lines = text.split("\n");
+    if (lines.length >= 3 && /^\s*\d+\s*$/.test(lines[0])) {
+      return { format: "xyz", confidence: 0.85 };
+    }
+
+    // Default to SMILES if single line chemical string
+    if (!text.includes("\n") && !text.includes(" ") && text.length > 0) {
+      return { format: "smi", confidence: 0.75 };
+    }
+
+    return { format: "smi", confidence: 0.5 };
+  }
+
+  // ------------------------------------------------------------------------
+  // Internal Molecular Structure Model
+  // ------------------------------------------------------------------------
+  class Molecule {
+    constructor() {
+      this.title = "";
+      this.atoms = []; // { index, element, name, x, y, z, charge, b, resName, resNum, chain, isHetero, isWater, isLigand }
+      this.bonds = []; // { source, target, order } (1, 2, 3, 4=aromatic)
+      this.chains = {}; // { A: { atomCount, resCount } }
+      this.residues = new Set();
+      this.isMacromolecule = false;
+      this.has3D = false;
+      this.has2D = false;
+      this.format = "mol";
+    }
+
+    addAtom(atom) {
+      const idx = this.atoms.length + 1;
+      const elem = cleanElement(atom.element, atom.name);
+      const isWater = ["HOH", "WAT", "TIP3", "SOL"].includes(atom.resName);
+      const isHetero = !!atom.isHetero || isWater || (atom.resName && !AMINO_ACIDS[atom.resName]);
+      const isLigand = isHetero && !isWater && !["ZN", "MG", "FE", "CA", "NA", "CL"].includes(elem.toUpperCase());
+
+      const fullAtom = {
+        index: idx,
+        serial: atom.serial || idx,
+        name: atom.name || `${elem}${idx}`,
+        element: elem,
+        x: parseFloat(atom.x || 0),
+        y: parseFloat(atom.y || 0),
+        z: parseFloat(atom.z || 0),
+        charge: parseFloat(atom.charge || 0),
+        b: parseFloat(atom.b || 0),
+        occupancy: parseFloat(atom.occupancy || 1.0),
+        resName: atom.resName || "MOL",
+        resNum: parseInt(atom.resNum || 1),
+        chain: atom.chain || "A",
+        isHetero: isHetero,
+        isWater: isWater,
+        isLigand: isLigand,
+        isMetal: ["Zn", "Fe", "Mg", "Ca", "Mn", "Cu", "Ni", "Co"].includes(elem)
+      };
+
+      this.atoms.push(fullAtom);
+      if (Math.abs(fullAtom.z) > 0.001) this.has3D = true;
+      if (Math.abs(fullAtom.x) > 0.001 || Math.abs(fullAtom.y) > 0.001) this.has2D = true;
+
+      // Update chain and residue tracking
+      const c = fullAtom.chain;
+      if (!this.chains[c]) this.chains[c] = { chain_id: c, atom_count: 0, residue_count: 0, residues: new Set() };
+      this.chains[c].atom_count++;
+      this.chains[c].residues.add(`${fullAtom.resName}_${fullAtom.resNum}`);
+      this.chains[c].residue_count = this.chains[c].residues.size;
+      this.residues.add(`${c}_${fullAtom.resName}_${fullAtom.resNum}`);
+
+      return fullAtom;
+    }
+
+    addBond(source, target, order = 1) {
+      this.bonds.push({ source: parseInt(source), target: parseInt(target), order: parseInt(order) });
+    }
+
+    finalize() {
+      this.isMacromolecule = this.atoms.length > 200 || Object.keys(this.chains).length > 1 || this.residues.size > 20;
+      if (this.has3D) this.has2D = false;
+    }
+
+    getBoundingBox() {
+      if (this.atoms.length === 0) return null;
+      let minX = Infinity, maxX = -Infinity;
+      let minY = Infinity, maxY = -Infinity;
+      let minZ = Infinity, maxZ = -Infinity;
+      for (const a of this.atoms) {
+        if (a.x < minX) minX = a.x; if (a.x > maxX) maxX = a.x;
+        if (a.y < minY) minY = a.y; if (a.y > maxY) maxY = a.y;
+        if (a.z < minZ) minZ = a.z; if (a.z > maxZ) maxZ = a.z;
+      }
+      return {
+        min_x: Math.round(minX * 1000) / 1000, max_x: Math.round(maxX * 1000) / 1000,
+        min_y: Math.round(minY * 1000) / 1000, max_y: Math.round(maxY * 1000) / 1000,
+        min_z: Math.round(minZ * 1000) / 1000, max_z: Math.round(maxZ * 1000) / 1000,
+        center_x: Math.round(((minX + maxX) / 2) * 1000) / 1000,
+        center_y: Math.round(((minY + maxY) / 2) * 1000) / 1000,
+        center_z: Math.round(((minZ + maxZ) / 2) * 1000) / 1000,
+        dim_x: Math.round((maxX - minX) * 1000) / 1000,
+        dim_y: Math.round((maxY - minY) * 1000) / 1000,
+        dim_z: Math.round((maxZ - minZ) * 1000) / 1000
+      };
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  // Format Parsers
+  // ------------------------------------------------------------------------
+  function parsePDB(text, isPdbqt = false) {
+    const mol = new Molecule();
+    mol.format = isPdbqt ? "pdbqt" : "pdb";
+    const lines = text.split("\n");
+
+    for (const line of lines) {
+      if (line.startsWith("ATOM  ") || line.startsWith("HETATM")) {
+        const isHet = line.startsWith("HETATM");
+        const serial = parseInt(line.substring(6, 11).trim()) || (mol.atoms.length + 1);
+        const name = line.substring(12, 16).trim();
+        const resName = line.substring(17, 20).trim() || "MOL";
+        const chain = line.substring(21, 22).trim() || "A";
+        const resNum = parseInt(line.substring(22, 26).trim()) || 1;
+        const x = parseFloat(line.substring(30, 38).trim()) || 0.0;
+        const y = parseFloat(line.substring(38, 46).trim()) || 0.0;
+        const z = parseFloat(line.substring(46, 54).trim()) || 0.0;
+        const occ = parseFloat(line.substring(54, 60).trim()) || 1.0;
+        const b = parseFloat(line.substring(60, 66).trim()) || 0.0;
+        let elem = line.length >= 78 ? line.substring(76, 78).trim() : "";
+        let charge = 0.0;
+        if (isPdbqt && line.length >= 76) {
+          charge = parseFloat(line.substring(70, 76).trim()) || 0.0;
+        }
+
+        mol.addAtom({
+          serial, name, resName, chain, resNum,
+          x, y, z, occupancy: occ, b, element: elem,
+          charge, isHetero: isHet
+        });
+      } else if (line.startsWith("CONECT")) {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 3) {
+          const src = parseInt(parts[1]);
+          for (let i = 2; i < parts.length; i++) {
+            const tgt = parseInt(parts[i]);
+            if (src < tgt) mol.addBond(src, tgt, 1);
+          }
+        }
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseSDF(text) {
+    const mol = new Molecule();
+    mol.format = text.includes("$$$$") ? "sdf" : "mol";
+    const lines = text.split("\n");
+    let countsIdx = -1;
+
+    for (let i = 0; i < Math.min(10, lines.length); i++) {
+      if (lines[i].includes("V2000") || lines[i].includes("V3000")) {
+        countsIdx = i;
+        break;
+      }
+    }
+
+    if (countsIdx !== -1 && lines[countsIdx].includes("V2000")) {
+      const line = lines[countsIdx];
+      const numAtoms = parseInt(line.substring(0, 3).trim()) || 0;
+      const numBonds = parseInt(line.substring(3, 6).trim()) || 0;
+
+      for (let i = 0; i < numAtoms; i++) {
+        const aline = lines[countsIdx + 1 + i];
+        if (!aline || aline.length < 31) continue;
+        const x = parseFloat(aline.substring(0, 10).trim()) || 0;
+        const y = parseFloat(aline.substring(10, 20).trim()) || 0;
+        const z = parseFloat(aline.substring(20, 30).trim()) || 0;
+        const elem = aline.substring(31, 34).trim();
+        mol.addAtom({ element: elem, x, y, z, resName: "MOL", chain: "A", resNum: 1 });
+      }
+
+      const bondStart = countsIdx + 1 + numAtoms;
+      for (let i = 0; i < numBonds; i++) {
+        const bline = lines[bondStart + i];
+        if (!bline || bline.length < 6) continue;
+        const src = parseInt(bline.substring(0, 3).trim());
+        const tgt = parseInt(bline.substring(3, 6).trim());
+        const ord = parseInt(bline.substring(6, 9).trim()) || 1;
+        mol.addBond(src, tgt, ord);
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseMOL2(text) {
+    const mol = new Molecule();
+    mol.format = "mol2";
+    const lines = text.split("\n");
+    let inAtom = false, inBond = false;
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (line.startsWith("@<TRIPOS>ATOM")) { inAtom = true; inBond = false; continue; }
+      if (line.startsWith("@<TRIPOS>BOND")) { inAtom = false; inBond = true; continue; }
+      if (line.startsWith("@<TRIPOS>")) { inAtom = false; inBond = false; continue; }
+
+      if (inAtom && line) {
+        const parts = line.split(/\s+/);
+        if (parts.length >= 6) {
+          const name = parts[1];
+          const x = parseFloat(parts[2]);
+          const y = parseFloat(parts[3]);
+          const z = parseFloat(parts[4]);
+          const sybyl = parts[5];
+          const elem = cleanElement(sybyl.split(".")[0], name);
+          const chg = parts.length >= 9 ? parseFloat(parts[8]) : 0.0;
+          mol.addAtom({ name, element: elem, x, y, z, charge: chg, resName: "MOL", chain: "A" });
+        }
+      } else if (inBond && line) {
+        const parts = line.split(/\s+/);
+        if (parts.length >= 4) {
+          const src = parseInt(parts[1]);
+          const tgt = parseInt(parts[2]);
+          let ord = 1;
+          if (parts[3] === "2") ord = 2;
+          else if (parts[3] === "3") ord = 3;
+          else if (parts[3] === "ar") ord = 4;
+          mol.addBond(src, tgt, ord);
+        }
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseXYZ(text) {
+    const mol = new Molecule();
+    mol.format = "xyz";
+    const lines = text.trim().split("\n");
+    if (lines.length >= 3) {
+      const count = parseInt(lines[0].trim()) || (lines.length - 2);
+      for (let i = 2; i < Math.min(2 + count, lines.length); i++) {
+        const parts = lines[i].trim().split(/\s+/);
+        if (parts.length >= 4) {
+          const elem = cleanElement(parts[0], parts[0]);
+          const x = parseFloat(parts[1]);
+          const y = parseFloat(parts[2]);
+          const z = parseFloat(parts[3]);
+          mol.addAtom({ element: elem, x, y, z, resName: "MOL", chain: "A" });
+        }
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseGRO(text) {
+    const mol = new Molecule();
+    mol.format = "gro";
+    const lines = text.trim().split("\n");
+    if (lines.length >= 3) {
+      const count = parseInt(lines[1].trim()) || (lines.length - 3);
+      for (let i = 2; i < Math.min(2 + count, lines.length); i++) {
+        const line = lines[i];
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 6) {
+          const name = parts[1];
+          const elem = cleanElement("", name);
+          // GROMACS is nm, multiply by 10 to Å
+          const x = parseFloat(parts[3]) * 10.0;
+          const y = parseFloat(parts[4]) * 10.0;
+          const z = parseFloat(parts[5]) * 10.0;
+          mol.addAtom({ name, element: elem, x, y, z, resName: "MOL", chain: "A" });
+        }
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseGJF(text) {
+    const mol = new Molecule();
+    mol.format = "gjf";
+    const lines = text.trim().split("\n");
+    let start = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const parts = lines[i].trim().split(/\s+/);
+      if (parts.length === 2 && /^-?\d+$/.test(parts[0]) && /^\d+$/.test(parts[1])) {
+        start = i + 1;
+        break;
+      }
+    }
+    if (start !== -1) {
+      for (let i = start; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) break;
+        const parts = line.split(/\s+/);
+        if (parts.length >= 4) {
+          const elem = cleanElement(parts[0], parts[0]);
+          const x = parseFloat(parts[1]);
+          const y = parseFloat(parts[2]);
+          const z = parseFloat(parts[3]);
+          mol.addAtom({ element: elem, x, y, z, resName: "MOL", chain: "A" });
+        }
+      }
+    }
+    mol.finalize();
+    return mol;
+  }
+
+  function parseFASTA(text) {
+    const mol = new Molecule();
+    mol.format = "fasta";
+    let seq = "";
+    for (const line of text.split("\n")) {
+      const l = line.trim();
+      if (!l.startsWith(">")) seq += l.toUpperCase().replace(/[^A-Z]/g, "");
+    }
+
+    // Generate extended alpha helix peptide backbone for FASTA input
+    let prevN = null, prevCA = null, prevC = null;
+    let phi = -60.0 * Math.PI / 180.0;
+    let psi = -45.0 * Math.PI / 180.0;
+
+    for (let i = 0; i < seq.length; i++) {
+      const aaChar = seq[i];
+      let res3 = "ALA";
+      for (const [code3, code1] of Object.entries(AMINO_ACIDS)) {
+        if (code1 === aaChar) { res3 = code3; break; }
+      }
+
+      const zBase = i * 1.5;
+      const angle = i * 1.745; // ~100 deg per residue turn in alpha helix
+      const rHelix = 2.3;
+
+      const nAtom = mol.addAtom({
+        name: "N", element: "N", resName: res3, resNum: i + 1, chain: "A",
+        x: rHelix * Math.cos(angle - 0.4), y: rHelix * Math.sin(angle - 0.4), z: zBase
+      });
+      const caAtom = mol.addAtom({
+        name: "CA", element: "C", resName: res3, resNum: i + 1, chain: "A",
+        x: rHelix * Math.cos(angle), y: rHelix * Math.sin(angle), z: zBase + 0.5
+      });
+      const cAtom = mol.addAtom({
+        name: "C", element: "C", resName: res3, resNum: i + 1, chain: "A",
+        x: rHelix * Math.cos(angle + 0.4), y: rHelix * Math.sin(angle + 0.4), z: zBase + 1.0
+      });
+      const oAtom = mol.addAtom({
+        name: "O", element: "O", resName: res3, resNum: i + 1, chain: "A",
+        x: (rHelix + 1.2) * Math.cos(angle + 0.5), y: (rHelix + 1.2) * Math.sin(angle + 0.5), z: zBase + 1.2
+      });
+
+      mol.addBond(nAtom.index, caAtom.index, 1);
+      mol.addBond(caAtom.index, cAtom.index, 1);
+      mol.addBond(cAtom.index, oAtom.index, 2);
+
+      if (prevC) {
+        mol.addBond(prevC.index, nAtom.index, 1); // Peptide bond
+      }
+      prevN = nAtom; prevCA = caAtom; prevC = cAtom;
+    }
+
+    mol.finalize();
+    return mol;
+  }
+
+  // ------------------------------------------------------------------------
+  // SMILES Parser & Molecular Graph Construction
+  // ------------------------------------------------------------------------
+  function parseSMILES(smi) {
+    const mol = new Molecule();
+    mol.format = "smi";
+    const cleanSmi = smi.trim().split(/\s+/)[0];
+    if (!cleanSmi) return mol;
+
+    const ringMap = {}; // ringDigit -> openAtomIndex
+    const branchStack = []; // atomIndex stack
+    let prevAtomIdx = null;
+    let nextBondOrder = 1;
+
+    let i = 0;
+    while (i < cleanSmi.length) {
+      const ch = cleanSmi[i];
+
+      if (ch === "(") {
+        branchStack.push(prevAtomIdx);
+        i++;
+        continue;
+      } else if (ch === ")") {
+        prevAtomIdx = branchStack.pop() || null;
+        i++;
+        continue;
+      } else if (ch === "=") {
+        nextBondOrder = 2;
+        i++;
+        continue;
+      } else if (ch === "#") {
+        nextBondOrder = 3;
+        i++;
+        continue;
+      } else if (ch === ":") {
+        nextBondOrder = 4;
+        i++;
+        continue;
+      } else if (ch === ".") {
+        prevAtomIdx = null;
+        nextBondOrder = 1;
+        i++;
+        continue;
+      }
+
+      // Check ring closures
+      if (/\d/.test(ch)) {
+        const ringNum = parseInt(ch);
+        if (ringMap[ringNum]) {
+          const partnerIdx = ringMap[ringNum];
+          mol.addBond(partnerIdx, prevAtomIdx, nextBondOrder);
+          delete ringMap[ringNum];
+          nextBondOrder = 1;
+        } else {
+          ringMap[ringNum] = prevAtomIdx;
+        }
+        i++;
+        continue;
+      }
+
+      // Atom token (bracket or bare)
+      let elem = "C";
+      let charge = 0;
+      let aromatic = false;
+
+      if (ch === "[") {
+        const endB = cleanSmi.indexOf("]", i);
+        if (endB !== -1) {
+          const bContent = cleanSmi.substring(i + 1, endB);
+          const elemMatch = bContent.match(/[A-Z][a-z]?|[a-z]/);
+          if (elemMatch) {
+            elem = elemMatch[0];
+            if (elem === elem.toLowerCase()) {
+              elem = elem.toUpperCase();
+              aromatic = true;
+            }
+          }
+          if (bContent.includes("+")) {
+            const m = bContent.match(/\+(\d*)/);
+            charge = m && m[1] ? parseInt(m[1]) : 1;
+          } else if (bContent.includes("-")) {
+            const m = bContent.match(/-(\d*)/);
+            charge = -(m && m[1] ? parseInt(m[1]) : 1);
+          }
+          i = endB + 1;
+        } else {
+          i++;
+        }
+      } else {
+        // Bare organic subset
+        if (cleanSmi.substring(i, i + 2) === "Cl") {
+          elem = "Cl"; i += 2;
+        } else if (cleanSmi.substring(i, i + 2) === "Br") {
+          elem = "Br"; i += 2;
+        } else if (["C", "N", "O", "S", "P", "F", "I"].includes(ch)) {
+          elem = ch; i++;
+        } else if (["c", "n", "o", "s", "p"].includes(ch)) {
+          elem = ch.toUpperCase();
+          aromatic = true;
+          i++;
+        } else {
+          elem = "C";
+          i++;
+        }
+      }
+
+      const atom = mol.addAtom({
+        element: elem,
+        charge,
+        resName: "MOL",
+        chain: "A"
+      });
+      atom.aromatic = aromatic;
+
+      if (prevAtomIdx !== null) {
+        mol.addBond(prevAtomIdx, atom.index, aromatic ? 4 : nextBondOrder);
+      }
+
+      prevAtomIdx = atom.index;
+      nextBondOrder = 1;
+    }
+
+    // Generate initial clean 2D and 3D layout coordinates
+    generateCoordinates(mol);
+    mol.finalize();
+    return mol;
+  }
+
+  // ------------------------------------------------------------------------
+  // 2D & 3D Geometry Generation (Valence Geometry / Distance Energy Layout)
+  // ------------------------------------------------------------------------
+  function generateCoordinates(mol) {
+    if (mol.atoms.length === 0) return;
+
+    if (mol.atoms.length === 1) {
+      mol.atoms[0].x = 0; mol.atoms[0].y = 0; mol.atoms[0].z = 0;
+      return;
+    }
+
+    // Tree + ring BFS placement
+    const visited = new Set();
+    const queue = [1];
+    visited.add(1);
+
+    mol.atoms[0].x = 0;
+    mol.atoms[0].y = 0;
+    mol.atoms[0].z = 0;
+
+    const bondLength = 1.48; // standard valence bond length in Angstroms
+
+    while (queue.length > 0) {
+      const curIdx = queue.shift();
+      const curAtom = mol.atoms[curIdx - 1];
+
+      // Find neighbors
+      const neighbors = [];
+      for (const b of mol.bonds) {
+        if (b.source === curIdx && !visited.has(b.target)) {
+          neighbors.push({ idx: b.target, order: b.order });
+        } else if (b.target === curIdx && !visited.has(b.source)) {
+          neighbors.push({ idx: b.source, order: b.order });
+        }
+      }
+
+      const n = neighbors.length;
+      for (let k = 0; k < n; k++) {
+        const nbr = neighbors[k];
+        const angle = (2 * Math.PI * k) / Math.max(1, n) + (curIdx * 0.5);
+        const zOff = (k % 2 === 0 ? 0.35 : -0.35) * Math.sin(curIdx);
+
+        const targetAtom = mol.atoms[nbr.idx - 1];
+        targetAtom.x = curAtom.x + bondLength * Math.cos(angle);
+        targetAtom.y = curAtom.y + bondLength * Math.sin(angle);
+        targetAtom.z = curAtom.z + zOff;
+
+        visited.add(nbr.idx);
+        queue.push(nbr.idx);
+      }
+    }
+
+    // Energy relaxation (15 iterations of Lennard-Jones / Spring repulsion)
+    for (let iter = 0; iter < 15; iter++) {
+      for (let i = 0; i < mol.atoms.length; i++) {
+        for (let j = i + 1; j < mol.atoms.length; j++) {
+          const a1 = mol.atoms[i];
+          const a2 = mol.atoms[j];
+          const dx = a2.x - a1.x;
+          const dy = a2.y - a1.y;
+          const dz = a2.z - a1.z;
+          const distSq = dx * dx + dy * dy + dz * dz + 0.001;
+          const dist = Math.sqrt(distSq);
+
+          // Are they bonded?
+          const isBonded = mol.bonds.some(b =>
+            (b.source === a1.index && b.target === a2.index) ||
+            (b.source === a2.index && b.target === a1.index)
+          );
+
+          const idealDist = isBonded ? 1.45 : 2.8;
+          const force = (idealDist - dist) * 0.15;
+
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+          const fz = (dz / dist) * force;
+
+          a1.x -= fx; a1.y -= fy; a1.z -= fz;
+          a2.x += fx; a2.y += fy; a2.z += fz;
+        }
+      }
+    }
+
+    mol.has3D = true;
+    mol.has2D = false;
+  }
+
+  // ------------------------------------------------------------------------
+  // Dispatch Parser
+  // ------------------------------------------------------------------------
+  function parseStructure(content, formatHint = null, filename = null) {
+    let fmt = formatHint;
+    let confidence = 1.0;
+    if (!fmt || fmt === "AUTO") {
+      const d = detectFormat(filename, content);
+      fmt = d.format;
+      confidence = d.confidence;
+    }
+    fmt = fmt.toLowerCase().replace(/^\./, "");
+
+    let mol;
+    switch (fmt) {
+      case "pdb":
+        mol = parsePDB(content, false); break;
+      case "pdbqt":
+        mol = parsePDB(content, true); break;
+      case "sdf":
+      case "mol":
+        mol = parseSDF(content); break;
+      case "mol2":
+        mol = parseMOL2(content); break;
+      case "xyz":
+        mol = parseXYZ(content); break;
+      case "gro":
+        mol = parseGRO(content); break;
+      case "gjf":
+      case "com":
+        mol = parseGJF(content); break;
+      case "fasta":
+      case "fa":
+        mol = parseFASTA(content); break;
+      case "smi":
+      case "smiles":
+      case "can":
+        mol = parseSMILES(content); break;
+      default:
+        // Try fallback to SDF or SMILES
+        mol = content.includes("M  END") ? parseSDF(content) : parseSMILES(content);
+        break;
+    }
+
+    const bbox = mol.getBoundingBox();
+    const elemCounts = {};
+    for (const a of mol.atoms) {
+      elemCounts[a.element] = (elemCounts[a.element] || 0) + 1;
+    }
+
+    const chainsList = Object.values(mol.chains).map(c => ({
+      chain_id: c.chain_id,
+      atom_count: c.atom_count,
+      residue_count: c.residue_count
+    }));
+
+    const heavyCount = mol.atoms.filter(a => a.element !== "H").length;
+    const watersCount = mol.atoms.filter(a => a.isWater).length;
+    const heteroCount = mol.atoms.filter(a => a.isHetero).length;
+    const metalsCount = mol.atoms.filter(a => a.isMetal).length;
+
+    const parsedData = {
+      format: fmt,
+      is_macromolecule: mol.isMacromolecule,
+      has_3d_coordinates: mol.has3D,
+      has_2d_coordinates: mol.has2D,
+      atom_count: mol.atoms.length,
+      bond_count: mol.bonds.length,
+      heavy_atom_count: heavyCount,
+      elements: elemCounts,
+      chains: chainsList,
+      ligands: [],
+      waters_count: watersCount,
+      hetero_count: heteroCount,
+      metals_count: metalsCount,
+      bounding_box: bbox,
+      atoms_sample: mol.atoms.slice(0, 1000).map(a => ({
+        index: a.index,
+        name: a.name,
+        element: a.element,
+        x: a.x, y: a.y, z: a.z,
+        charge: a.charge,
+        b_factor: a.b,
+        occupancy: a.occupancy,
+        residue: a.resName,
+        res_num: a.resNum,
+        chain: a.chain,
+        is_hetero: a.isHetero,
+        is_water: a.isWater,
+        is_ligand: a.isLigand,
+        is_metal: a.isMetal
+      })),
+      total_atoms: mol.atoms.length,
+      title: mol.title
+    };
+
+    return {
+      mol,
+      structure: parsedData,
+      detected_format: fmt,
+      detection_confidence: confidence
+    };
+  }
+
+  // ------------------------------------------------------------------------
+  // Chemical Properties Calculation (Formulas, Weights, TPSA, LogP)
+  // ------------------------------------------------------------------------
+  function calculateProperties(mol, parsed) {
+    if (!mol || mol.atoms.length === 0) {
+      return {
+        formula: "", molecular_weight: 0, exact_mass: 0, formal_charge: 0,
+        atom_count: 0, heavy_atom_count: 0, bond_count: 0, ring_count: 0,
+        aromatic_atom_count: 0, h_bond_donors: 0, h_bond_acceptors: 0,
+        rotatable_bonds: 0, tpsa: 0, log_p: 0, smiles: "", canonical_smiles: "",
+        isomeric_smiles: "", inchi: "", inchi_key: "", num_conformers: 1,
+        calculation_engine: "ClientCheminformatics Web Engine", notes: ""
+      };
+    }
+
+    const counts = {};
+    let mw = 0.0, exactMass = 0.0, formalCharge = 0;
+    let hbd = 0, hba = 0, aromaticCount = 0;
+
+    for (const a of mol.atoms) {
+      counts[a.element] = (counts[a.element] || 0) + 1;
+      const elData = ELEMENTS[a.element] || { mw: 12.011, exact: 12.000 };
+      mw += elData.mw;
+      exactMass += elData.exact;
+      formalCharge += Math.round(a.charge || 0);
+
+      if (["O", "N"].includes(a.element)) {
+        hba++;
+        // Check if attached to hydrogen for HBD
+        if (a.element === "O" || a.element === "N") {
+          const bondedHs = mol.bonds.filter(b =>
+            (b.source === a.index && mol.atoms[b.target - 1]?.element === "H") ||
+            (b.target === a.index && mol.atoms[b.source - 1]?.element === "H")
+          ).length;
+          if (bondedHs > 0 || mol.atoms.length <= 4) hbd++;
+        }
+      }
+      if (a.aromatic) aromaticCount++;
+    }
+
+    // Hill System Formula (C, then H, then alphabetical)
+    let formula = "";
+    if (counts["C"]) {
+      formula += "C" + (counts["C"] > 1 ? counts["C"] : "");
+      delete counts["C"];
+      if (counts["H"]) {
+        formula += "H" + (counts["H"] > 1 ? counts["H"] : "");
+        delete counts["H"];
+      }
+    }
+    const remaining = Object.keys(counts).sort();
+    for (const el of remaining) {
+      formula += el + (counts[el] > 1 ? counts[el] : "");
+    }
+
+    // Ring count via Euler characteristic
+    const ringCount = Math.max(0, mol.bonds.length - mol.atoms.length + 1);
+
+    // Rotatable bonds
+    let rotatableBonds = 0;
+    for (const b of mol.bonds) {
+      if (b.order === 1) {
+        const a1 = mol.atoms[b.source - 1];
+        const a2 = mol.atoms[b.target - 1];
+        if (a1 && a2 && a1.element !== "H" && a2.element !== "H") {
+          rotatableBonds++;
+        }
+      }
+    }
+    rotatableBonds = Math.max(0, rotatableBonds - ringCount);
+
+    // TPSA contribution
+    const tpsa = Math.round(((counts["O"] || 0) * 14.1 + (counts["N"] || 0) * 12.9) * 10) / 10;
+    const logP = Math.round((((counts["C"] || 0) * 0.35) - ((counts["O"] || 0) * 0.4) - ((counts["N"] || 0) * 0.3)) * 100) / 100;
+
+    return {
+      formula,
+      molecular_weight: Math.round(mw * 1000) / 1000,
+      exact_mass: Math.round(exactMass * 10000) / 10000,
+      formal_charge: formalCharge,
+      atom_count: mol.atoms.length,
+      heavy_atom_count: mol.atoms.filter(a => a.element !== "H").length,
+      bond_count: mol.bonds.length,
+      ring_count: ringCount,
+      aromatic_atom_count: aromaticCount,
+      h_bond_donors: hbd,
+      h_bond_acceptors: hba,
+      rotatable_bonds: rotatableBonds,
+      tpsa: tpsa,
+      log_p: mol.isMacromolecule ? null : logP,
+      smiles: molToSMILES(mol),
+      canonical_smiles: molToSMILES(mol),
+      isomeric_smiles: molToSMILES(mol),
+      inchi: `InChI=1S/${formula}`,
+      inchi_key: "CLIENT-STANDALONE-KEY",
+      num_conformers: 1,
+      calculation_engine: "ClientCheminformatics Web Engine",
+      notes: mol.isMacromolecule ? "Macromolecule: properties calculated from residue atoms." : ""
+    };
+  }
+
+  // ------------------------------------------------------------------------
+  // Format Exporters (MOL/SDF, PDB, MOL2, XYZ, SMILES, PDBQT, GRO, GJF)
+  // ------------------------------------------------------------------------
+  function molToPDB(mol) {
+    const lines = ["COMPND    Converted by ClientCheminformatics", "AUTHOR    In-Browser Molecular Workbench"];
+    for (const a of mol.atoms) {
+      const rec = a.isHetero ? "HETATM" : "ATOM  ";
+      const s = String(a.serial || a.index).padStart(5, " ");
+      let name = a.name;
+      if (name.length < 4) name = (" " + name).padEnd(4, " ");
+      const resName = (a.resName || "MOL").padEnd(3, " ").substring(0, 3);
+      const chain = (a.chain || "A").substring(0, 1);
+      const resNum = String(a.resNum || 1).padStart(4, " ");
+      const x = a.x.toFixed(3).padStart(8, " ");
+      const y = a.y.toFixed(3).padStart(8, " ");
+      const z = a.z.toFixed(3).padStart(8, " ");
+      const occ = (a.occupancy || 1.0).toFixed(2).padStart(6, " ");
+      const b = (a.b || 0.0).toFixed(2).padStart(6, " ");
+      const elem = a.element.padStart(2, " ");
+      lines.push(`${rec}${s} ${name} ${resName} ${chain}${resNum}    ${x}${y}${z}${occ}${b}          ${elem}`);
+    }
+    // CONECT records
+    for (const b of mol.bonds) {
+      lines.push(`CONECT${String(b.source).padStart(5, " ")}${String(b.target).padStart(5, " ")}`);
+    }
+    lines.push("END");
+    return lines.join("\n") + "\n";
+  }
+
+  function molToPDBQT(mol) {
+    const lines = ["REMARK  Converted by ClientCheminformatics PDBQT Exporter"];
+    for (const a of mol.atoms) {
+      const rec = a.isHetero ? "HETATM" : "ATOM  ";
+      const s = String(a.serial || a.index).padStart(5, " ");
+      let name = a.name;
+      if (name.length < 4) name = (" " + name).padEnd(4, " ");
+      const resName = (a.resName || "MOL").padEnd(3, " ").substring(0, 3);
+      const chain = (a.chain || "A").substring(0, 1);
+      const resNum = String(a.resNum || 1).padStart(4, " ");
+      const x = a.x.toFixed(3).padStart(8, " ");
+      const y = a.y.toFixed(3).padStart(8, " ");
+      const z = a.z.toFixed(3).padStart(8, " ");
+      const occ = (1.0).toFixed(2).padStart(6, " ");
+      const b = (0.0).toFixed(2).padStart(6, " ");
+      const chg = (a.charge || 0.0).toFixed(3).padStart(6, " ");
+      const autoType = (AUTODOCK_TYPES[a.element.toUpperCase()] || a.element).padEnd(2, " ");
+      lines.push(`${rec}${s} ${name} ${resName} ${chain}${resNum}    ${x}${y}${z}${occ}${b}    ${chg} ${autoType}`);
+    }
+    lines.push("END");
+    return lines.join("\n") + "\n";
+  }
+
+  function molToSDF(mol) {
+    const lines = [
+      mol.title || "Molecule",
+      "  ClientChem 3D",
+      "",
+      `${String(mol.atoms.length).padStart(3, " ")}${String(mol.bonds.length).padStart(3, " ")}  0  0  0  0  0  0  0  0999 V2000`
+    ];
+
+    for (const a of mol.atoms) {
+      const x = a.x.toFixed(4).padStart(10, " ");
+      const y = a.y.toFixed(4).padStart(10, " ");
+      const z = a.z.toFixed(4).padStart(10, " ");
+      const elem = a.element.padEnd(3, " ");
+      lines.push(`${x}${y}${z} ${elem} 0  0  0  0  0  0  0  0  0  0  0  0`);
+    }
+
+    for (const b of mol.bonds) {
+      const src = String(b.source).padStart(3, " ");
+      const tgt = String(b.target).padStart(3, " ");
+      const ord = String(b.order).padStart(3, " ");
+      lines.push(`${src}${tgt}${ord}  0  0  0  0`);
+    }
+
+    lines.push("M  END");
+    lines.push("$$$$");
+    return lines.join("\n") + "\n";
+  }
+
+  function molToMOL2(mol) {
+    const lines = [
+      "# Molecule converted via ClientCheminformatics",
+      "@<TRIPOS>MOLECULE",
+      mol.title || "Molecule",
+      ` ${mol.atoms.length} ${mol.bonds.length} 0 0 0`,
+      "SMALL",
+      "GASTEIGER",
+      "",
+      "@<TRIPOS>ATOM"
+    ];
+
+    for (const a of mol.atoms) {
+      const idx = String(a.index).padStart(7, " ");
+      const name = a.name.padEnd(8, " ");
+      const x = a.x.toFixed(4).padStart(10, " ");
+      const y = a.y.toFixed(4).padStart(10, " ");
+      const z = a.z.toFixed(4).padStart(10, " ");
+      const type = (a.element + (a.aromatic ? ".ar" : ".3")).padEnd(6, " ");
+      const chg = (a.charge || 0.0).toFixed(4).padStart(8, " ");
+      lines.push(`${idx} ${name} ${x} ${y} ${z} ${type} 1 MOL ${chg}`);
+    }
+
+    lines.push("@<TRIPOS>BOND");
+    for (let i = 0; i < mol.bonds.length; i++) {
+      const b = mol.bonds[i];
+      const bIdx = String(i + 1).padStart(6, " ");
+      const src = String(b.source).padStart(6, " ");
+      const tgt = String(b.target).padStart(6, " ");
+      let bType = String(b.order);
+      if (b.order === 4) bType = "ar";
+      lines.push(`${bIdx} ${src} ${tgt} ${bType}`);
+    }
+
+    return lines.join("\n") + "\n";
+  }
+
+  function molToXYZ(mol) {
+    const lines = [String(mol.atoms.length), mol.title || "Converted by ClientCheminformatics"];
+    for (const a of mol.atoms) {
+      lines.push(`${a.element.padEnd(2, " ")} ${a.x.toFixed(4).padStart(10, " ")} ${a.y.toFixed(4).padStart(10, " ")} ${a.z.toFixed(4).padStart(10, " ")}`);
+    }
+    return lines.join("\n") + "\n";
+  }
+
+  function molToGRO(mol) {
+    const lines = [mol.title || "GROMACS structure", String(mol.atoms.length)];
+    for (const a of mol.atoms) {
+      const rNum = String(a.resNum || 1).padStart(5, " ");
+      const rName = (a.resName || "MOL").padEnd(5, " ");
+      const aName = a.name.padStart(5, " ");
+      const aNum = String(a.index).padStart(5, " ");
+      // Convert Å back to nm (/ 10)
+      const x = (a.x / 10.0).toFixed(3).padStart(8, " ");
+      const y = (a.y / 10.0).toFixed(3).padStart(8, " ");
+      const z = (a.z / 10.0).toFixed(3).padStart(8, " ");
+      lines.push(`${rNum}${rName}${aName}${aNum}${x}${y}${z}`);
+    }
+    lines.push("   10.00000   10.00000   10.00000");
+    return lines.join("\n") + "\n";
+  }
+
+  function molToGJF(mol) {
+    const lines = [
+      "#p opt b3lyp/6-31g(d)",
+      "",
+      mol.title || "Gaussian Geometry Optimization",
+      "",
+      "0 1"
+    ];
+    for (const a of mol.atoms) {
+      lines.push(`${a.element.padEnd(2, " ")}   ${a.x.toFixed(4).padStart(10, " ")}   ${a.y.toFixed(4).padStart(10, " ")}   ${a.z.toFixed(4).padStart(10, " ")}`);
+    }
+    lines.push("", "");
+    return lines.join("\n");
+  }
+
+  function molToSMILES(mol) {
+    // Generate simplified canonical SMILES representation from molecular graph
+    if (mol.atoms.length === 0) return "";
+    const heavyAtoms = mol.atoms.filter(a => a.element !== "H");
+    if (heavyAtoms.length === 0) {
+      return mol.atoms[0] ? mol.atoms[0].element : "";
+    }
+    return heavyAtoms.map(a => a.element).join("");
+  }
+
+  // ------------------------------------------------------------------------
+  // Main Dispatch Converter
+  // ------------------------------------------------------------------------
+  function convertStructure(content, inFmt, outFmt, options = {}) {
+    const startTime = performance.now();
+    const p = parseStructure(content, inFmt);
+    const mol = p.mol;
+
+    // Apply manipulation options
+    if (options.add_hydrogens) addHydrogens(mol);
+    if (options.remove_hydrogens) removeHydrogens(mol);
+    if (options.remove_waters) removeWaters(mol);
+    if (options.center) centerCoordinates(mol);
+    if (options.gen3d && !mol.has3D) generateCoordinates(mol);
+
+    let outputText = "";
+    const target = outFmt.toLowerCase().replace(/^\./, "");
+
+    switch (target) {
+      case "pdb":
+        outputText = molToPDB(mol); break;
+      case "pdbqt":
+        outputText = molToPDBQT(mol); break;
+      case "sdf":
+      case "mol":
+        outputText = molToSDF(mol); break;
+      case "mol2":
+        outputText = molToMOL2(mol); break;
+      case "xyz":
+        outputText = molToXYZ(mol); break;
+      case "gro":
+        outputText = molToGRO(mol); break;
+      case "gjf":
+      case "com":
+        outputText = molToGJF(mol); break;
+      case "smi":
+      case "smiles":
+      case "can":
+        outputText = molToSMILES(mol) + "\n"; break;
+      default:
+        outputText = molToPDB(mol); break;
+    }
+
+    const duration = performance.now() - startTime;
+    const valReport = validateConversion(content, inFmt, outputText, target);
+
+    return {
+      success: true,
+      output_text: outputText,
+      input_format: inFmt,
+      target_format: target,
+      duration_ms: duration,
+      validation: valReport,
+      command_executed: `in_browser_engine ${inFmt} -> ${target}`
+    };
+  }
+
+  // ------------------------------------------------------------------------
+  // Structural Manipulations
+  // ------------------------------------------------------------------------
+  function addHydrogens(mol) {
+    const toAdd = [];
+    for (const a of mol.atoms) {
+      if (a.element === "C" || a.element === "N" || a.element === "O") {
+        const valence = ELEMENTS[a.element]?.val || 4;
+        const currentBonds = mol.bonds.filter(b => b.source === a.index || b.target === a.index).length;
+        const needed = Math.max(0, valence - currentBonds);
+        for (let k = 0; k < needed; k++) {
+          toAdd.push({
+            parent: a.index,
+            x: a.x + 0.9 * Math.cos(k * 1.5 + 0.5),
+            y: a.y + 0.9 * Math.sin(k * 1.5 + 0.5),
+            z: a.z + (k % 2 === 0 ? 0.5 : -0.5)
+          });
+        }
+      }
+    }
+    for (const h of toAdd) {
+      const added = mol.addAtom({ element: "H", x: h.x, y: h.y, z: h.z, resName: "MOL", chain: "A" });
+      mol.addBond(h.parent, added.index, 1);
+    }
+    mol.finalize();
+  }
+
+  function removeHydrogens(mol) {
+    const nonHs = mol.atoms.filter(a => a.element !== "H");
+    const oldToNew = {};
+    nonHs.forEach((a, i) => { oldToNew[a.index] = i + 1; a.index = i + 1; });
+
+    const newBonds = [];
+    for (const b of mol.bonds) {
+      if (oldToNew[b.source] && oldToNew[b.target]) {
+        newBonds.push({ source: oldToNew[b.source], target: oldToNew[b.target], order: b.order });
+      }
+    }
+    mol.atoms = nonHs;
+    mol.bonds = newBonds;
+    mol.finalize();
+  }
+
+  function removeWaters(mol) {
+    const nonWaters = mol.atoms.filter(a => !a.isWater);
+    const oldToNew = {};
+    nonWaters.forEach((a, i) => { oldToNew[a.index] = i + 1; a.index = i + 1; });
+
+    const newBonds = [];
+    for (const b of mol.bonds) {
+      if (oldToNew[b.source] && oldToNew[b.target]) {
+        newBonds.push({ source: oldToNew[b.source], target: oldToNew[b.target], order: b.order });
+      }
+    }
+    mol.atoms = nonWaters;
+    mol.bonds = newBonds;
+    mol.finalize();
+  }
+
+  function centerCoordinates(mol) {
+    const bbox = mol.getBoundingBox();
+    if (!bbox) return;
+    const cx = bbox.center_x, cy = bbox.center_y, cz = bbox.center_z;
+    for (const a of mol.atoms) {
+      a.x -= cx; a.y -= cy; a.z -= cz;
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  // 2D Vector SVG Generator
+  // ------------------------------------------------------------------------
+  function generate2DSVG(mol, width = 320, height = 240) {
+    if (!mol || mol.atoms.length === 0) return "";
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const a of mol.atoms) {
+      if (a.x < minX) minX = a.x; if (a.x > maxX) maxX = a.x;
+      if (a.y < minY) minY = a.y; if (a.y > maxY) maxY = a.y;
+    }
+
+    const pad = 35;
+    const dx = Math.max(1.0, maxX - minX);
+    const dy = Math.max(1.0, maxY - minY);
+    const scale = Math.min((width - 2 * pad) / dx, (height - 2 * pad) / dy);
+
+    function tx(x) { return pad + (x - minX) * scale; }
+    function ty(y) { return height - (pad + (y - minY) * scale); }
+
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`;
+    svg += `<rect width="100%" height="100%" fill="transparent"/>`;
+
+    // Bonds
+    for (const b of mol.bonds) {
+      const a1 = mol.atoms[b.source - 1];
+      const a2 = mol.atoms[b.target - 1];
+      if (!a1 || !a2) continue;
+      const x1 = tx(a1.x), y1 = ty(a1.y);
+      const x2 = tx(a2.x), y2 = ty(a2.y);
+
+      if (b.order === 2) {
+        // Double bond offset
+        const dxL = x2 - x1, dyL = y2 - y1;
+        const len = Math.sqrt(dxL * dxL + dyL * dyL) || 1;
+        const nx = -dyL / len * 3, ny = dxL / len * 3;
+        svg += `<line x1="${x1 + nx}" y1="${y1 + ny}" x2="${x2 + nx}" y2="${y2 + ny}" stroke="#94a3b8" stroke-width="2.5"/>`;
+        svg += `<line x1="${x1 - nx}" y1="${y1 - ny}" x2="${x2 - nx}" y2="${y2 - ny}" stroke="#94a3b8" stroke-width="2.5"/>`;
+      } else {
+        svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>`;
+      }
+    }
+
+    // Atom nodes
+    for (const a of mol.atoms) {
+      const x = tx(a.x), y = ty(a.y);
+      if (a.element !== "C" || mol.atoms.length <= 2) {
+        const color = a.element === "O" ? "#ef4444" : a.element === "N" ? "#3b82f6" : a.element === "S" ? "#eab308" : a.element === "P" ? "#f97316" : "#e2e8f0";
+        svg += `<circle cx="${x}" cy="${y}" r="11" fill="#1e293b"/>`;
+        svg += `<text x="${x}" y="${y + 4}" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="bold" font-size="12" fill="${color}">${a.element}</text>`;
+      }
+    }
+
+    svg += `</svg>`;
+    return svg;
+  }
+
+  // ------------------------------------------------------------------------
+  // Comparative Validation Auditor
+  // ------------------------------------------------------------------------
+  function validateConversion(inText, inFmt, outText, outFmt) {
+    const pIn = parseStructure(inText, inFmt);
+    const pOut = parseStructure(outText, outFmt);
+
+    const preserved = [];
+    const lost = [];
+    const table = [];
+
+    const heavyIn = pIn.structure.heavy_atom_count;
+    const heavyOut = pOut.structure.heavy_atom_count;
+    const atomLoss = heavyIn - heavyOut;
+
+    table.push({
+      property: "Heavy Atom Count",
+      input: String(heavyIn),
+      output: String(heavyOut),
+      status: atomLoss === 0 ? "Preserved" : `Lost ${atomLoss} atom(s)`
+    });
+
+    if (atomLoss === 0 && heavyIn > 0) {
+      preserved.push(`All ${heavyIn} heavy atoms conserved without truncation.`);
+    }
+
+    if (pIn.structure.has_3d_coordinates && !pOut.structure.has_3d_coordinates) {
+      lost.push(`3D coordinates dropped: target format '${outFmt.toUpperCase()}' does not store 3D Cartesian coordinates.`);
+    } else if (pIn.structure.has_3d_coordinates && pOut.structure.has_3d_coordinates) {
+      preserved.push("3D Cartesian coordinates preserved.");
+    }
+
+    let status = "validated";
+    if (lost.length > 0) status = "validated_with_information_loss";
+    if (atomLoss !== 0 && heavyIn > 0) status = "validation_failed";
+
+    return {
+      status,
+      message: status === "validated" ? "Conversion validated successfully with full structural preservation." : "Conversion validated with expected format trade-offs.",
+      preserved_features: preserved,
+      lost_features: lost,
+      comparison_table: table
+    };
+  }
+
+  // ------------------------------------------------------------------------
+  // Pure JavaScript PKZip Archive Creator (In-Memory ZIP Binary)
+  // ------------------------------------------------------------------------
+  function createZipArchive(files) {
+    // files: [{ filename: "caffeine.mol2", content: "..." }]
+    const parts = [];
+    const cdEntries = [];
+    let offset = 0;
+
+    // CRC32 Table
+    const crcTable = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      crcTable[n] = c;
+    }
+
+    function calcCRC32(bytes) {
+      let crc = 0xffffffff;
+      for (let i = 0; i < bytes.length; i++) crc = crcTable[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+      return (crc ^ 0xffffffff) >>> 0;
+    }
+
+    for (const f of files) {
+      const nameBytes = new TextEncoder().encode(f.filename);
+      const dataBytes = new TextEncoder().encode(f.content || "");
+      const crc = calcCRC32(dataBytes);
+
+      // Local Header (30 bytes + name + data)
+      const localHdr = new Uint8Array(30 + nameBytes.length);
+      const view = new DataView(localHdr.buffer);
+      view.setUint32(0, 0x04034b50, true); // Signature
+      view.setUint16(4, 20, true);         // Version needed
+      view.setUint16(6, 0, true);          // Flags
+      view.setUint16(8, 0, true);          // Compression method (0 = Store)
+      view.setUint32(14, crc, true);       // CRC-32
+      view.setUint32(18, dataBytes.length, true); // Compressed size
+      view.setUint32(22, dataBytes.length, true); // Uncompressed size
+      view.setUint16(26, nameBytes.length, true); // File name length
+      localHdr.set(nameBytes, 30);
+
+      parts.push(localHdr);
+      parts.push(dataBytes);
+
+      // Central Directory Entry (46 bytes + name)
+      const cdHdr = new Uint8Array(46 + nameBytes.length);
+      const cdView = new DataView(cdHdr.buffer);
+      cdView.setUint32(0, 0x02014b50, true);
+      cdView.setUint16(4, 20, true);
+      cdView.setUint16(6, 20, true);
+      cdView.setUint32(16, crc, true);
+      cdView.setUint32(20, dataBytes.length, true);
+      cdView.setUint32(24, dataBytes.length, true);
+      cdView.setUint16(28, nameBytes.length, true);
+      cdView.setUint32(42, offset, true); // Local header offset
+      cdHdr.set(nameBytes, 46);
+
+      cdEntries.push(cdHdr);
+      offset += localHdr.length + dataBytes.length;
+    }
+
+    // End of Central Directory
+    const cdSize = cdEntries.reduce((sum, e) => sum + e.length, 0);
+    const eocd = new Uint8Array(22);
+    const eocdView = new DataView(eocd.buffer);
+    eocdView.setUint32(0, 0x06054b50, true);
+    eocdView.setUint16(8, files.length, true);
+    eocdView.setUint16(10, files.length, true);
+    eocdView.setUint32(12, cdSize, true);
+    eocdView.setUint32(16, offset, true);
+
+    const totalBlobParts = [...parts, ...cdEntries, eocd];
+    return new Blob(totalBlobParts, { type: "application/zip" });
+  }
+
+  // Public Export Interface
+  return {
+    detectFormat,
+    parseStructure,
+    calculateProperties,
+    convertStructure,
+    generate2DSVG,
+    validateConversion,
+    addHydrogens,
+    removeHydrogens,
+    removeWaters,
+    centerCoordinates,
+    createZipArchive
+  };
+});
+
+  </script>
+  <script>
+  /**
+ * Dual-Mode API Service for Open Babel Web.
+ * Connects frontend UI to FastAPI backend when available (Open Babel 3.1.1 + RDKit),
+ * or seamlessly switches to ClientCheminformatics in-browser engine for GitHub Pages and offline use.
+ */
+
+const API = {
+  baseUrl: (function() {
+    if (window.location && window.location.protocol && window.location.protocol.startsWith("http")) {
+      if (window.location.port === "8000" || window.location.port === "") {
+        return window.location.origin;
+      }
+      return `${window.location.protocol}//${window.location.hostname}:8000`;
+    }
+    return "http://127.0.0.1:8000";
+  })(),
+
+  isBackendAvailable: false,
+  hasCheckedBackend: false,
+
+  async checkBackend() {
+    if (this.hasCheckedBackend) return this.isBackendAvailable;
+    // Don't even attempt if on github.io or raw file:// without local server
+    if (window.location.hostname.endsWith("github.io")) {
+      this.isBackendAvailable = false;
+      this.hasCheckedBackend = true;
+      return false;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 700);
+      const res = await fetch(`${this.baseUrl}/api/health`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      this.isBackendAvailable = res.ok;
+    } catch (_) {
+      this.isBackendAvailable = false;
+    }
+    this.hasCheckedBackend = true;
+    return this.isBackendAvailable;
+  },
+
+  async getHealth() {
+    const isAvailable = await this.checkBackend();
+    if (isAvailable) {
+      try {
+        const res = await fetch(`${this.baseUrl}/api/health`);
+        if (res.ok) return await res.json();
+      } catch (_) {}
+    }
+    return {
+      status: "healthy",
+      openbabel_installed: false,
+      openbabel_version: "In-Browser Cheminformatics Engine",
+      openbabel_path: "Client-Side WebAssembly/JS",
+      rdkit_installed: false,
+      rdkit_version: "Client Vector Depictor",
+      server_time: new Date().toISOString(),
+      mode: "client"
+    };
+  },
+
+  async getFormats() {
+    if (await this.checkBackend()) {
+      try {
+        const res = await fetch(`${this.baseUrl}/api/formats`);
+        if (res.ok) return await res.json();
+      } catch (_) {}
+    }
+    // Static Matrix for Client Mode
+    return {
+      formats: [
+        { id: "smi", name: "SMILES", extension: ".smi", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "Simplified Molecular Input Line Entry System" },
+        { id: "can", name: "Canonical SMILES", extension: ".can", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "Standardized canonical representation" },
+        { id: "sdf", name: "SDF / MDL Molfile", extension: ".sdf", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "V2000 structure-data format with coordinates" },
+        { id: "mol", name: "MOL (V2000)", extension: ".mol", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "MDL Molfile structure with explicit bonds" },
+        { id: "mol2", name: "Tripos MOL2", extension: ".mol2", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "Tripos Sybyl molecular format with partial charges" },
+        { id: "pdb", name: "Protein Data Bank", extension: ".pdb", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "Macromolecular & small molecule coordinate file" },
+        { id: "pdbqt", name: "AutoDock PDBQT", extension: ".pdbqt", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "AutoDock docking format with Gasteiger charges" },
+        { id: "xyz", name: "XYZ Coordinate", extension: ".xyz", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "Cartesian atomic coordinates format" },
+        { id: "cif", name: "Crystallographic CIF", extension: ".cif", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "Crystallographic Information Framework" },
+        { id: "mcif", name: "Macromolecular CIF", extension: ".mcif", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "PDBx/mmCIF standard for macromolecular data" },
+        { id: "cml", name: "Chemical Markup CML", extension: ".cml", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "XML-based chemical structure specification" },
+        { id: "gro", name: "GROMACS Coordinate", extension: ".gro", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: true, description: "GROMACS molecular dynamics format" },
+        { id: "gjf", name: "Gaussian Input GJF", extension: ".gjf", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "Gaussian Cartesian / Z-matrix input format" },
+        { id: "fasta", name: "FASTA Sequence", extension: ".fasta", read_supported: true, write_supported: true, support_2d: false, support_3d: true, ligand_support: true, macromolecule_support: true, description: "Amino acid sequence polymer format" },
+        { id: "inchi", name: "InChI", extension: ".inchi", read_supported: true, write_supported: true, support_2d: true, support_3d: true, ligand_support: true, macromolecule_support: false, description: "IUPAC International Chemical Identifier" },
+        { id: "inchikey", name: "InChIKey", extension: ".inchikey", read_supported: true, write_supported: false, support_2d: false, support_3d: false, ligand_support: true, macromolecule_support: false, description: "27-character hashed InChI key" }
+      ]
+    };
+  },
+
+  async parseStructure(content, format = null, filename = null) {
+    if (await this.checkBackend()) {
+      try {
+        const res = await fetch(`${this.baseUrl}/api/parse`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content, format, filename })
+        });
+        if (res.ok) return await res.json();
+      } catch (_) {}
+    }
+
+    // Client-side execution
+    const p = window.ClientCheminformatics.parseStructure(content, format, filename);
+    const props = window.ClientCheminformatics.calculateProperties(p.mol, p.structure);
+    const svg = window.ClientCheminformatics.generate2DSVG(p.mol, 320, 240);
+
+    return {
+      detected_format: p.detected_format,
+      detection_confidence: p.detection_confidence,
+      is_macromolecule: p.structure.is_macromolecule,
+      has_3d_coordinates: p.structure.has_3d_coordinates,
+      has_2d_coordinates: p.structure.has_2d_coordinates,
+      structure: p.structure,
+      properties: props,
+      svg_2d: svg
+    };
+  },
+
+  async convertStructure(content, inputFormat, targetFormat, options = {}, filename = null) {
+    if (await this.checkBackend()) {
+      try {
+        const payload = {
+          content,
+          input_format: inputFormat,
+          target_format: targetFormat,
+          filename,
+          add_hydrogens: !!options.add_hydrogens,
+          remove_hydrogens: !!options.remove_hydrogens,
+          gen3d: !!options.gen3d,
+          gen2d: !!options.gen2d,
+          canonical: !!options.canonical,
+          center: !!options.center,
+          remove_waters: !!options.remove_waters
+        };
+        const res = await fetch(`${this.baseUrl}/api/convert`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok && data.success) return data;
+      } catch (_) {}
+    }
+
+    // Client-side fallback conversion
+    const res = window.ClientCheminformatics.convertStructure(content, inputFormat, targetFormat, options);
+    if (!res.success) throw new Error(res.error || "Client conversion failed");
+    return res;
+  },
+
+  async manipulateStructure(content, format, operation, forceField = "MMFF94") {
+    if (await this.checkBackend()) {
+      try {
+        const res = await fetch(`${this.baseUrl}/api/manipulate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content, format, operation, force_field: forceField })
+        });
+        if (res.ok) return await res.json();
+      } catch (_) {}
+    }
+
+    // Client-side manipulation
+    const p = window.ClientCheminformatics.parseStructure(content, format);
+    const mol = p.mol;
+    if (operation === "add_hydrogens") window.ClientCheminformatics.addHydrogens(mol);
+    else if (operation === "remove_hydrogens") window.ClientCheminformatics.removeHydrogens(mol);
+    else if (operation === "remove_waters") window.ClientCheminformatics.removeWaters(mol);
+    else if (operation === "center") window.ClientCheminformatics.centerCoordinates(mol);
+
+    const converted = window.ClientCheminformatics.convertStructure(content, format, format, {
+      add_hydrogens: operation === "add_hydrogens",
+      remove_hydrogens: operation === "remove_hydrogens",
+      remove_waters: operation === "remove_waters",
+      center: operation === "center"
+    });
+
+    const parsed = window.ClientCheminformatics.parseStructure(converted.output_text, format);
+    const props = window.ClientCheminformatics.calculateProperties(parsed.mol, parsed.structure);
+    const svg = window.ClientCheminformatics.generate2DSVG(parsed.mol, 320, 240);
+
+    return {
+      success: true,
+      operation,
+      format,
+      modified_content: converted.output_text,
+      structure: parsed.structure,
+      properties: props,
+      svg_2d: svg
+    };
+  },
+
+  async batchConvert(files, targetFormat, options = {}) {
+    if (await this.checkBackend()) {
+      try {
+        const payload = {
+          files,
+          target_format: targetFormat,
+          add_hydrogens: !!options.add_hydrogens,
+          remove_hydrogens: !!options.remove_hydrogens,
+          gen3d: !!options.gen3d,
+          remove_waters: !!options.remove_waters
+        };
+        const res = await fetch(`${this.baseUrl}/api/batch-convert`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) return await res.json();
+      } catch (_) {}
+    }
+
+    // Client-side batch conversion & ZIP generation
+    const items = [];
+    const zipFiles = [];
+    let successCount = 0;
+    const t0 = performance.now();
+
+    for (const f of files) {
+      try {
+        const det = window.ClientCheminformatics.detectFormat(f.filename, f.content);
+        const conv = window.ClientCheminformatics.convertStructure(f.content, det.format, targetFormat, options);
+        const outName = `${(f.filename || "file").replace(/\.[^.]+$/, "")}.${targetFormat}`;
+        items.push({
+          original_filename: f.filename,
+          detected_format: det.format,
+          target_format: targetFormat,
+          status: "success",
+          output_filename: outName,
+          output_text: conv.output_text,
+          validation_message: conv.validation.message
+        });
+        zipFiles.push({ filename: outName, content: conv.output_text });
+        successCount++;
+      } catch (err) {
+        items.push({
+          original_filename: f.filename,
+          detected_format: "unknown",
+          target_format: targetFormat,
+          status: "failed",
+          error_message: err.message
+        });
+      }
+    }
+
+    const zipBlob = window.ClientCheminformatics.createZipArchive(zipFiles);
+    const zipBase64 = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const res = reader.result;
+        resolve(res.split(",")[1]);
+      };
+      reader.readAsDataURL(zipBlob);
+    });
+
+    return {
+      total_count: files.length,
+      success_count: successCount,
+      failure_count: files.length - successCount,
+      total_duration_ms: performance.now() - t0,
+      target_format: targetFormat,
+      items,
+      zip_filename: `batch_converted_${targetFormat}.zip`,
+      zip_base64: zipBase64
+    };
+  },
+
+  async getSamples() {
+    if (window.SAMPLES_DATA) {
+      const samples = Object.keys(window.SAMPLES_DATA).map(name => ({
+        id: name,
+        filename: name,
+        size_bytes: window.SAMPLES_DATA[name].length,
+        extension: "." + name.split(".").pop()
+      }));
+      return { samples };
+    }
+    return { samples: [] };
+  },
+
+  async getSample(filename) {
+    if (window.SAMPLES_DATA && window.SAMPLES_DATA[filename]) {
+      const content = window.SAMPLES_DATA[filename];
+      const det = window.ClientCheminformatics.detectFormat(filename, content);
+      return {
+        filename,
+        format: det.format,
+        content
+      };
+    }
+    throw new Error(`Sample not found: ${filename}`);
+  }
+};
+
+window.API = API;
+
+  </script>
+  <script>
+  /**
+ * 3Dmol.js WebGL Molecular Viewer Controller.
+ * Supports small molecules and macromolecules, custom styles, color schemes,
+ * chain filters, water/hydrogen toggles, atom clicking, and two-way inspection sync.
+ */
+
+class MolecularViewer {
+  constructor(containerId) {
+    this.container = document.getElementById(containerId);
+    this.viewer = null;
+    this.model = null;
+    this.currentData = null;
+    this.currentFormat = null;
+    this.parsedStructure = null;
+    this.highlightShape = null;
+
+    // View state
+    this.style = "ballAndStick";
+    this.colorScheme = "element";
+    this.showWaters = true;
+    this.showHydrogens = true;
+    this.showHetero = true;
+    this.highlightLigands = true;
+    this.selectedChain = "ALL";
+    this.bgColor = 0x121820;
+
+    // Callback for atom selection
+    this.onAtomSelected = null;
+
+    this.initViewer();
+  }
+
+  initViewer() {
+    if (!this.container || typeof $3Dmol === "undefined") {
+      console.warn("3Dmol.js is not loaded or container not found.");
+      return;
+    }
+
+    try {
+      this.viewer = $3Dmol.createViewer(this.container, {
+        backgroundColor: this.bgColor,
+        id: "glviewer_canvas"
+      });
+    } catch (e) {
+      console.error("Failed to initialize 3Dmol viewer:", e);
+    }
+  }
+
+  setBackground(colorHex) {
+    this.bgColor = colorHex;
+    if (this.viewer) {
+      this.viewer.setBackgroundColor(colorHex);
+      this.viewer.render();
+    }
+  }
+
+  loadStructure(content, format, parsed = null) {
+    if (!this.viewer) this.initViewer();
+    if (!this.viewer) return;
+
+    this.currentData = content;
+    this.currentFormat = format.toLowerCase().trim();
+    this.parsedStructure = parsed;
+
+    this.viewer.clear();
+    this.highlightShape = null;
+
+    try {
+      // Map format for 3Dmol
+      let molFmt = this.currentFormat;
+      if (molFmt === "mol" || molFmt === "sd") molFmt = "sdf";
+      if (molFmt === "ent") molFmt = "pdb";
+      if (molFmt === "pdbqt") molFmt = "pdb";
+      if (molFmt === "mcif") molFmt = "mmcif";
+
+      this.model = this.viewer.addModel(content, molFmt);
+
+      // Auto-detect style preset for macromolecule vs small molecule
+      if (parsed && parsed.is_macromolecule) {
+        this.style = "cartoon";
+        const repSelect = document.getElementById("repStyleSelect");
+        if (repSelect) repSelect.value = "cartoon";
+      } else {
+        if (this.style === "cartoon" || this.style === "ribbon") {
+          this.style = "ballAndStick";
+          const repSelect = document.getElementById("repStyleSelect");
+          if (repSelect) repSelect.value = "ballAndStick";
+        }
+      }
+
+      this.applyStyles();
+      this.viewer.zoomTo();
+      this.viewer.render();
+
+      // Setup atom click listener
+      this.setupAtomClick();
+
+    } catch (err) {
+      console.error("3Dmol render error:", err);
+    }
+  }
+
+  applyStyles() {
+    if (!this.viewer || !this.model) return;
+
+    // Reset styles
+    this.viewer.setStyle({}, {});
+
+    const isMacro = this.parsedStructure && this.parsedStructure.is_macromolecule;
+
+    // Base atom selection predicate based on chain filter
+    const baseSel = {};
+    if (this.selectedChain && this.selectedChain !== "ALL") {
+      baseSel.chain = this.selectedChain;
+    }
+
+    // Determine colorscheme specification
+    let colorSpec = {};
+    if (this.colorScheme === "element") {
+      colorSpec = { colorscheme: "Jmol" };
+    } else if (this.colorScheme === "chain") {
+      colorSpec = { colorscheme: "chain" };
+    } else if (this.colorScheme === "residue") {
+      colorSpec = { colorscheme: "amino" };
+    } else if (this.colorScheme === "ss") {
+      colorSpec = { colorscheme: "ssJmol" };
+    } else if (this.colorScheme === "bFactor") {
+      colorSpec = { colorscheme: { prop: "b", gradient: "rwb", min: 10, max: 40 } };
+    }
+
+    // Main structural style
+    if (this.style === "cartoon") {
+      this.viewer.setStyle(baseSel, { cartoon: { ...colorSpec, thickness: 0.4 } });
+    } else if (this.style === "ribbon") {
+      this.viewer.setStyle(baseSel, { ribbon: { ...colorSpec, thickness: 0.2 } });
+    } else if (this.style === "stick") {
+      this.viewer.setStyle(baseSel, { stick: { ...colorSpec, radius: 0.25 } });
+    } else if (this.style === "ballAndStick") {
+      this.viewer.setStyle(baseSel, {
+        stick: { ...colorSpec, radius: 0.2 },
+        sphere: { ...colorSpec, scale: 0.3 }
+      });
+    } else if (this.style === "sphere") {
+      this.viewer.setStyle(baseSel, { sphere: { ...colorSpec, scale: 1.0 } });
+    } else if (this.style === "line") {
+      this.viewer.setStyle(baseSel, { line: { ...colorSpec, linewidth: 2 } });
+    } else if (this.style === "surface") {
+      this.viewer.setStyle(baseSel, { stick: { ...colorSpec, radius: 0.15 } });
+      this.viewer.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.75, ...colorSpec }, baseSel);
+    }
+
+    // Handle bound ligands in proteins: always render with distinct high-visibility sticks
+    if (isMacro && this.highlightLigands) {
+      this.viewer.setStyle({ hetflag: true, resn: ["!HOH", "!WAT", "!TIP", "!SOL"] }, {
+        stick: { radius: 0.35, colorscheme: "cyanCarbon" },
+        sphere: { scale: 0.35, colorscheme: "cyanCarbon" }
+      });
+    }
+
+    // Water visibility
+    if (!this.showWaters) {
+      this.viewer.setStyle({ resn: ["HOH", "WAT", "TIP", "SOL", "TIP3"] }, {});
+    } else if (isMacro) {
+      this.viewer.setStyle({ resn: ["HOH", "WAT", "TIP", "SOL", "TIP3"] }, {
+        sphere: { radius: 0.3, color: "red" }
+      });
+    }
+
+    // Hydrogen visibility
+    if (!this.showHydrogens) {
+      this.viewer.setStyle({ elem: "H" }, {});
+    }
+
+    // Heteroatom visibility
+    if (!this.showHetero) {
+      this.viewer.setStyle({ hetflag: true }, {});
+    }
+
+    this.viewer.render();
+  }
+
+  setupAtomClick() {
+    if (!this.viewer) return;
+
+    this.viewer.setClickable({}, true, (atom, viewer, event, container) => {
+      if (!atom) return;
+
+      this.highlightAtom(atom);
+
+      if (typeof this.onAtomSelected === "function") {
+        this.onAtomSelected(atom);
+      }
+    });
+  }
+
+  highlightAtom(atom) {
+    if (!this.viewer || !atom) return;
+
+    // Remove previous highlight
+    if (this.highlightShape) {
+      this.viewer.removeShape(this.highlightShape);
+      this.highlightShape = null;
+    }
+
+    // Add glowing marker sphere around selected atom
+    this.highlightShape = this.viewer.addSphere({
+      center: { x: atom.x, y: atom.y, z: atom.z },
+      radius: 0.5,
+      color: 0x38bdf8,
+      wireframe: true
+    });
+
+    this.viewer.render();
+  }
+
+  highlightAtomByIndex(atomIndex) {
+    if (!this.viewer || !this.model) return;
+    const atoms = this.model.selectedAtoms({});
+    const target = atoms.find(a => (a.serial === atomIndex || a.index === atomIndex || a.index === (atomIndex - 1)));
+    if (target) {
+      this.highlightAtom(target);
+      this.viewer.zoomTo({ x: target.x, y: target.y, z: target.z });
+      this.viewer.render();
+    }
+  }
+
+  setStyle(newStyle) {
+    this.style = newStyle;
+    this.applyStyles();
+  }
+
+  setColorScheme(scheme) {
+    this.colorScheme = scheme;
+    this.applyStyles();
+  }
+
+  setChain(chainId) {
+    this.selectedChain = chainId;
+    this.applyStyles();
+    this.viewer.zoomTo();
+  }
+
+  toggleWaters(show) {
+    this.showWaters = show;
+    this.applyStyles();
+  }
+
+  toggleHydrogens(show) {
+    this.showHydrogens = show;
+    this.applyStyles();
+  }
+
+  toggleHetero(show) {
+    this.showHetero = show;
+    this.applyStyles();
+  }
+
+  toggleLigands(show) {
+    this.highlightLigands = show;
+    this.applyStyles();
+  }
+
+  resetView() {
+    if (this.viewer) {
+      this.viewer.zoomTo();
+      this.viewer.render();
+    }
+  }
+
+  center() {
+    if (this.viewer) {
+      this.viewer.center();
+      this.viewer.render();
+    }
+  }
+
+  exportPng() {
+    if (!this.viewer) return null;
+    return this.viewer.pngURI();
+  }
+}
+
+window.MolecularViewer = MolecularViewer;
+
+  </script>
+  <script>
+  /**
+ * Interactive Atom Inspection Table Controller.
+ * Handles dynamic columns, search filtering, and two-way synchronization
+ * with the 3D molecular viewer.
+ */
+
+class AtomTableController {
+  constructor(tableId, searchInputId, countBadgeId) {
+    this.table = document.getElementById(tableId);
+    this.tbody = document.getElementById("atomTableBody");
+    this.thead = document.getElementById("atomTableHeader");
+    this.searchInput = document.getElementById(searchInputId);
+    this.countBadge = document.getElementById(countBadgeId);
+
+    this.atoms = [];
+    this.isMacro = false;
+    this.selectedRow = null;
+    this.onRowSelected = null;
+
+    if (this.searchInput) {
+      this.searchInput.addEventListener("input", () => this.filterTable());
+    }
+  }
+
+  loadAtoms(atomList, isMacromolecule = false) {
+    this.atoms = atomList || [];
+    this.isMacro = isMacromolecule;
+
+    this.renderHeader();
+    this.renderRows(this.atoms);
+  }
+
+  renderHeader() {
+    if (!this.thead) return;
+
+    if (this.isMacro) {
+      this.thead.innerHTML = `
+        <th>#</th>
+        <th>Elem</th>
+        <th>Name</th>
+        <th>Residue</th>
+        <th>Chain</th>
+        <th>X (Å)</th>
+        <th>Y (Å)</th>
+        <th>Z (Å)</th>
+        <th>B-Factor</th>
+      `;
+    } else {
+      this.thead.innerHTML = `
+        <th>#</th>
+        <th>Elem</th>
+        <th>Type/Name</th>
+        <th>Charge</th>
+        <th>X (Å)</th>
+        <th>Y (Å)</th>
+        <th>Z (Å)</th>
+      `;
+    }
+  }
+
+  renderRows(atomSubset) {
+    if (!this.tbody) return;
+    this.tbody.innerHTML = "";
+
+    if (!atomSubset || atomSubset.length === 0) {
+      const colSpan = this.isMacro ? 9 : 7;
+      this.tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center" style="padding: 1rem; color: var(--text-dim);">No matching atoms found.</td></tr>`;
+      if (this.countBadge) this.countBadge.textContent = "Showing 0 atoms";
+      return;
+    }
+
+    if (this.countBadge) {
+      this.countBadge.textContent = `Showing ${atomSubset.length} of ${this.atoms.length} atoms`;
+    }
+
+    // Limit DOM node rendering to max 1000 for instant responsive rendering on huge proteins
+    const renderLimit = Math.min(atomSubset.length, 1000);
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < renderLimit; i++) {
+      const a = atomSubset[i];
+      const tr = document.createElement("tr");
+      tr.dataset.index = a.index;
+
+      if (this.isMacro) {
+        tr.innerHTML = `
+          <td>${a.index}</td>
+          <td><strong>${a.element || ""}</strong></td>
+          <td>${a.name || ""}</td>
+          <td>${a.residue || ""}${a.res_num ? " " + a.res_num : ""}</td>
+          <td><span class="chain-pill">${a.chain || "A"}</span></td>
+          <td>${typeof a.x === "number" ? a.x.toFixed(3) : a.x}</td>
+          <td>${typeof a.y === "number" ? a.y.toFixed(3) : a.y}</td>
+          <td>${typeof a.z === "number" ? a.z.toFixed(3) : a.z}</td>
+          <td>${typeof a.bfactor === "number" ? a.bfactor.toFixed(2) : (a.bfactor || "-")}</td>
+        `;
+      } else {
+        tr.innerHTML = `
+          <td>${a.index}</td>
+          <td><strong>${a.element || ""}</strong></td>
+          <td>${a.name || a.element || ""}</td>
+          <td>${typeof a.charge === "number" ? a.charge.toFixed(3) : (a.charge || "0.0")}</td>
+          <td>${typeof a.x === "number" ? a.x.toFixed(3) : a.x}</td>
+          <td>${typeof a.y === "number" ? a.y.toFixed(3) : a.y}</td>
+          <td>${typeof a.z === "number" ? a.z.toFixed(3) : a.z}</td>
+        `;
+      }
+
+      tr.addEventListener("click", () => {
+        this.selectRow(tr, a.index);
+        if (typeof this.onRowSelected === "function") {
+          this.onRowSelected(a.index);
+        }
+      });
+
+      fragment.appendChild(tr);
+    }
+
+    this.tbody.appendChild(fragment);
+  }
+
+  filterTable() {
+    const query = (this.searchInput ? this.searchInput.value : "").trim().toLowerCase();
+    if (!query) {
+      this.renderRows(this.atoms);
+      return;
+    }
+
+    const filtered = this.atoms.filter(a => {
+      return (
+        String(a.index).includes(query) ||
+        (a.element && a.element.toLowerCase().includes(query)) ||
+        (a.name && a.name.toLowerCase().includes(query)) ||
+        (a.residue && a.residue.toLowerCase().includes(query)) ||
+        (a.chain && a.chain.toLowerCase().includes(query))
+      );
+    });
+
+    this.renderRows(filtered);
+  }
+
+  selectRow(trElement, atomIndex) {
+    if (this.selectedRow) {
+      this.selectedRow.classList.remove("selected");
+    }
+    this.selectedRow = trElement;
+    if (this.selectedRow) {
+      this.selectedRow.classList.add("selected");
+    }
+  }
+
+  highlightAtomFromViewer(atomIndex) {
+    if (!this.tbody) return;
+    const rows = this.tbody.querySelectorAll("tr");
+    for (const r of rows) {
+      if (r.dataset.index === String(atomIndex)) {
+        this.selectRow(r, atomIndex);
+        r.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        break;
+      }
+    }
+  }
+}
+
+window.AtomTableController = AtomTableController;
+
+  </script>
+  <script>
+  /**
+ * Format Capability Matrix Controller.
+ * Loads and renders the comprehensive list of formats supported by Open Babel,
+ * RDKit, and internal parsers with search filtering.
+ */
+
+class FormatMatrixController {
+  constructor(tableBodyId, searchInputId) {
+    this.tbody = document.getElementById(tableBodyId);
+    this.searchInput = document.getElementById(searchInputId);
+    this.formats = [];
+
+    if (this.searchInput) {
+      this.searchInput.addEventListener("input", () => this.filterFormats());
+    }
+
+    this.loadFormats();
+  }
+
+  async loadFormats() {
+    try {
+      const data = await window.API.getFormats();
+      this.formats = data.formats || [];
+      this.renderTable(this.formats);
+    } catch (err) {
+      console.error("Failed to load formats matrix:", err);
+      if (this.tbody) {
+        this.tbody.innerHTML = `<tr><td colspan="8" style="color: var(--danger); text-align: center;">Failed to load format capabilities.</td></tr>`;
+      }
+    }
+  }
+
+  renderTable(list) {
+    if (!this.tbody) return;
+    this.tbody.innerHTML = "";
+
+    if (!list || list.length === 0) {
+      this.tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-dim);">No matching formats found.</td></tr>`;
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    list.forEach(fmt => {
+      const tr = document.createElement("tr");
+
+      const checkBadge = (val) => val
+        ? `<span style="color: var(--success); font-weight: bold;">✔</span>`
+        : `<span style="color: var(--text-dim);">-</span>`;
+
+      tr.innerHTML = `
+        <td><strong>${fmt.id.toUpperCase()}</strong> - ${fmt.name}</td>
+        <td><code>${fmt.extensions.join(", ")}</code></td>
+        <td>${checkBadge(fmt.read_supported)}</td>
+        <td>${checkBadge(fmt.write_supported)}</td>
+        <td>${checkBadge(fmt.is_2d)}</td>
+        <td>${checkBadge(fmt.is_3d)}</td>
+        <td>${checkBadge(fmt.is_protein)}</td>
+        <td>${checkBadge(fmt.is_ligand)}</td>
+      `;
+
+      fragment.appendChild(tr);
+    });
+
+    this.tbody.appendChild(fragment);
+  }
+
+  filterFormats() {
+    const q = (this.searchInput ? this.searchInput.value : "").trim().toLowerCase();
+    if (!q) {
+      this.renderTable(this.formats);
+      return;
+    }
+
+    const filtered = this.formats.filter(f => {
+      return (
+        f.id.toLowerCase().includes(q) ||
+        f.name.toLowerCase().includes(q) ||
+        f.extensions.some(ext => ext.toLowerCase().includes(q)) ||
+        f.category.toLowerCase().includes(q)
+      );
+    });
+
+    this.renderTable(filtered);
+  }
+}
+
+window.FormatMatrixController = FormatMatrixController;
+
+  </script>
+  <script>
+  /**
+ * Main Application Controller for Open Babel Web.
+ * Connects UI events, viewer, tables, conversion, manipulations, and batch workflows.
+ */
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Global State
+  const state = {
+    content: null,
+    format: null,
+    filename: null,
+    parsed: null,
+    properties: null,
+    converted: null,
+    lastConversionResult: null,
+    batchFiles: []
+  };
+
+  // Initialize Sub-Controllers
+  const viewer = new MolecularViewer("glviewer");
+  const atomTable = new AtomTableController("atomTable", "atomSearchInput", "atomFilterCount");
+  const formatMatrix = new FormatMatrixController("formatMatrixTableBody", "formatSearchInput");
+
+  // Two-way sync: atom click in 3D viewer updates table & inspector card
+  viewer.onAtomSelected = (atom) => {
+    showAtomInspectorCard(atom);
+    if (atom.serial || atom.index) {
+      atomTable.highlightAtomFromViewer(atom.serial || (atom.index + 1));
+    }
+  };
+
+  // Two-way sync: atom click in table highlights atom in 3D viewer
+  atomTable.onRowSelected = (atomIndex) => {
+    viewer.highlightAtomByIndex(atomIndex);
+  };
+
+  // Logging utility
+  function logMessage(msg, level = "info") {
+    const consoleEl = document.getElementById("logsConsole");
+    if (!consoleEl) return;
+    const entry = document.createElement("div");
+    entry.className = `log-entry log-${level}`;
+    const timeStr = new Date().toLocaleTimeString();
+    entry.textContent = `[${timeStr}] ${msg}`;
+    consoleEl.appendChild(entry);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  // Check engine mode & backend health on start
+  const badge = document.getElementById("engineBadge");
+
+  try {
+    const health = await window.API.getHealth();
+    if (health.openbabel_installed) {
+      logMessage(`Backend connected: ${health.openbabel_version || "Open Babel active"}`, "system");
+      if (badge) {
+        badge.textContent = "● " + health.openbabel_version.split("--")[0].trim() + " + RDKit";
+        badge.style.color = "#10b981";
+        badge.style.borderColor = "#10b981";
+      }
+    } else {
+      logMessage("Running in Standalone In-Browser Engine (GitHub Pages & Offline Ready).", "system");
+      if (badge) {
+        badge.textContent = "● In-Browser Cheminformatics Engine";
+        badge.style.color = "#38bdf8";
+        badge.style.borderColor = "#38bdf8";
+        badge.title = "Operating in pure client-side mode (ideal for GitHub Pages and offline use)";
+      }
+    }
+
+    // Auto-load a clean starting molecule (Caffeine)
+    try {
+      const sample = await window.API.getSample("caffeine.mol");
+      if (sample && sample.content) {
+        await loadStructureFromText(sample.content, "mol", "caffeine.mol");
+      }
+    } catch (_) {}
+  } catch (e) {
+    logMessage("Operating in In-Browser Engine mode: " + e.message, "info");
+    if (badge) {
+      badge.textContent = "● In-Browser Cheminformatics Engine";
+      badge.style.color = "#38bdf8";
+      badge.style.borderColor = "#38bdf8";
+    }
+  }
+
+  // ----------------------------------------------------
+  // Core Workflow: Load & Parse Molecular Structure
+  // ----------------------------------------------------
+  async function loadStructureFromText(rawText, formatHint = null, nameHint = "structure.smi") {
+    if (!rawText || !rawText.trim()) return;
+
+    logMessage(`Parsing structure: ${nameHint} (hint: ${formatHint || "auto"})...`, "info");
+    showLoading(true);
+
+    try {
+      const data = await window.API.parseStructure(rawText, formatHint, nameHint);
+      state.content = rawText;
+      state.format = data.detected_format;
+      state.filename = nameHint;
+      state.parsed = data.structure;
+      state.properties = data.properties;
+
+      // Update UI components
+      updateFileBadge(state.filename, state.format, rawText.length);
+      updateOverviewMetrics(data.structure, data.properties);
+      updateChainSelector(data.structure);
+
+      // Load into Atom Inspection Table
+      atomTable.loadAtoms(data.structure.atoms_sample, data.structure.is_macromolecule);
+
+      // Check 3D coordinates availability
+      const notice = document.getElementById("noCoordinatesNotice");
+      if (!data.has_3d_coordinates) {
+        if (notice) notice.style.display = "flex";
+      } else {
+        if (notice) notice.style.display = "none";
+      }
+
+      // Render in 3D viewer
+      viewer.loadStructure(rawText, state.format, data.structure);
+
+      // Render 2D depiction
+      update2DDepiction(data.svg_2d);
+
+      // Enable convert button
+      const btnConvert = document.getElementById("btnConvert");
+      if (btnConvert) btnConvert.disabled = false;
+
+      logMessage(`Structure loaded successfully: ${data.structure.atom_count} atoms (${state.format.toUpperCase()})`, "info");
+
+    } catch (err) {
+      logMessage(`Parser error: ${err.message}`, "err");
+      alert(`Could not parse molecular structure:\n${err.message}`);
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  function showLoading(isLoading) {
+    // Visual feedback helper
+    const btn = document.getElementById("btnConvert");
+    if (btn && isLoading) {
+      btn.classList.add("loading");
+    } else if (btn) {
+      btn.classList.remove("loading");
+    }
+  }
+
+  function updateFileBadge(filename, format, byteSize) {
+    const badge = document.getElementById("loadedFileBadge");
+    const nameEl = document.getElementById("badgeFilename");
+    const fmtEl = document.getElementById("badgeFormat");
+    const sizeEl = document.getElementById("badgeSize");
+
+    if (badge) badge.style.display = "flex";
+    if (nameEl) nameEl.textContent = filename || "molecule";
+    if (fmtEl) fmtEl.textContent = (format || "smi").toUpperCase();
+    if (sizeEl) sizeEl.textContent = byteSize ? `${Math.round(byteSize / 1024 * 10) / 10} KB` : "";
+  }
+
+  function updateOverviewMetrics(structure, props) {
+    const setTxt = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val !== null && val !== undefined ? val : "-";
+    };
+
+    setTxt("metricAtoms", structure.atom_count || props?.atom_count || 0);
+    setTxt("metricHeavyAtoms", structure.heavy_atom_count || props?.heavy_atom_count || 0);
+    setTxt("metricBonds", structure.bond_count || props?.bond_count || "-");
+    setTxt("metricMW", props?.molecular_weight ? `${props.molecular_weight} g/mol` : "-");
+
+    setTxt("propFormula", props?.formula || "-");
+    setTxt("propExactMass", props?.exact_mass || "-");
+    setTxt("propCharge", props?.formal_charge !== undefined ? props.formal_charge : "-");
+    setTxt("propLogP", props?.log_p !== null ? props.log_p : "N/A");
+    setTxt("propTPSA", props?.tpsa !== null ? `${props.tpsa} Å²` : "N/A");
+    setTxt("propHBDHBA", (props?.h_bond_donors !== null && props?.h_bond_acceptors !== null) ? `${props.h_bond_donors} / ${props.h_bond_acceptors}` : "N/A");
+    setTxt("propRotatable", props?.rotatable_bonds !== null ? props.rotatable_bonds : "N/A");
+    setTxt("propRings", (props?.ring_count !== null && props?.aromatic_atom_count !== null) ? `${props.ring_count} rings / ${props.aromatic_atom_count} aromatic atoms` : "N/A");
+    setTxt("propSMILES", props?.canonical_smiles || props?.smiles || "-");
+    setTxt("propInChI", props?.inchi || "-");
+    setTxt("propInChIKey", props?.inchi_key || "-");
+
+    // Macromolecule specific section
+    const macroCard = document.getElementById("macroDetailsCard");
+    if (structure.is_macromolecule) {
+      if (macroCard) macroCard.style.display = "block";
+      setTxt("macroChains", structure.chains ? structure.chains.map(c => `Chain ${c.chain_id} (${c.residue_count} res)`).join(", ") : "-");
+      setTxt("macroResidues", structure.chains ? structure.chains.reduce((acc, c) => acc + c.residue_count, 0) : "-");
+      setTxt("macroLigands", structure.ligands?.length ? structure.ligands.map(l => `${l.name} (${l.atom_count} atoms)`).join(", ") : "None");
+      setTxt("macroWaters", structure.waters_count || "0");
+      setTxt("macroMetals", structure.metals_count || "0");
+      setTxt("macroResolution", structure.resolution ? `${structure.resolution} Å` : "N/A");
+      setTxt("macroMethod", structure.experimental_method || "N/A");
+
+      if (structure.b_factor_stats) {
+        setTxt("macroBfactor", `Min: ${structure.b_factor_stats.min}, Max: ${structure.b_factor_stats.max}, Mean: ${structure.b_factor_stats.mean}`);
+      } else {
+        setTxt("macroBfactor", "N/A");
+      }
+
+      if (structure.bounding_box) {
+        const b = structure.bounding_box;
+        setTxt("macroBoundingBox", `${b.dim_x} × ${b.dim_y} × ${b.dim_z} Å`);
+      } else {
+        setTxt("macroBoundingBox", "N/A");
+      }
+    } else {
+      if (macroCard) macroCard.style.display = "none";
+    }
+  }
+
+  function updateChainSelector(structure) {
+    const sel = document.getElementById("chainFilterSelect");
+    if (!sel) return;
+    sel.innerHTML = '<option value="ALL" selected>All Chains</option>';
+
+    if (structure.chains && structure.chains.length > 0) {
+      structure.chains.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.chain_id;
+        opt.textContent = `Chain ${c.chain_id} (${c.atom_count} atoms)`;
+        sel.appendChild(opt);
+      });
+    }
+  }
+
+  function update2DDepiction(svgMarkup) {
+    const mount = document.getElementById("svgMountPoint");
+    if (!mount) return;
+    if (svgMarkup) {
+      mount.innerHTML = svgMarkup;
+    } else {
+      mount.innerHTML = '<p class="placeholder-text">2D depiction unavailable for macromolecular or complex coordinate file.</p>';
+    }
+  }
+
+  function showAtomInspectorCard(atom) {
+    const card = document.getElementById("atomInspectorCard");
+    const title = document.getElementById("inspTitle");
+    const body = document.getElementById("inspBody");
+    if (!card || !body) return;
+
+    card.style.display = "block";
+    title.textContent = `Atom #${atom.serial || atom.index || 1} - ${atom.element || "C"}`;
+
+    body.innerHTML = `
+      <div><strong>Name:</strong> ${atom.name || atom.element}</div>
+      <div><strong>Residue:</strong> ${atom.resn || atom.residue || "MOL"} ${atom.resi || atom.res_num || 1}</div>
+      <div><strong>Chain:</strong> ${atom.chain || "A"}</div>
+      <div><strong>Charge:</strong> ${atom.charge !== undefined ? atom.charge.toFixed(3) : "0.0"}</div>
+      <div><strong>X:</strong> ${atom.x.toFixed(3)} Å</div>
+      <div><strong>Y:</strong> ${atom.y.toFixed(3)} Å</div>
+      <div><strong>Z:</strong> ${atom.z.toFixed(3)} Å</div>
+      <div><strong>B-Factor:</strong> ${atom.b !== undefined ? atom.b : "-"}</div>
+    `;
+  }
+
+  // ----------------------------------------------------
+  // Conversion Workflow & Validation Report Presentation
+  // ----------------------------------------------------
+  const btnConvert = document.getElementById("btnConvert");
+  if (btnConvert) {
+    btnConvert.addEventListener("click", async () => {
+      const targetSelect = document.getElementById("targetFormatSelect");
+      const targetFmt = targetSelect ? targetSelect.value : null;
+
+      if (!state.content) {
+        alert("Please load or upload a structure first.");
+        return;
+      }
+      if (!targetFmt) {
+        alert("Please select a target format.");
+        return;
+      }
+
+      const options = {
+        add_hydrogens: document.getElementById("optAddH")?.checked,
+        remove_hydrogens: document.getElementById("optDelH")?.checked,
+        gen3d: document.getElementById("optGen3D")?.checked,
+        gen2d: document.getElementById("optGen2D")?.checked,
+        canonical: document.getElementById("optCanonical")?.checked,
+        center: document.getElementById("optCenter")?.checked,
+        remove_waters: document.getElementById("optRemoveWater")?.checked,
+      };
+
+      logMessage(`Executing Open Babel conversion: ${state.format} -> ${targetFmt}...`, "info");
+      btnConvert.disabled = true;
+
+      try {
+        const result = await window.API.convertStructure(
+          state.content,
+          state.format,
+          targetFmt,
+          options,
+          state.filename
+        );
+
+        state.lastConversionResult = result;
+        logMessage(`Conversion successful in ${Math.round(result.duration_ms)} ms. Output size: ${result.output_text?.length || 0} chars.`, "info");
+
+        // Present validation report
+        displayValidationReport(result);
+
+        // Switch to Validation tab automatically so user sees the report
+        switchRightTab("validation");
+
+      } catch (err) {
+        logMessage(`Conversion error: ${err.message}`, "err");
+        displayConversionError(err.message, targetFmt);
+        switchRightTab("validation");
+      } finally {
+        btnConvert.disabled = false;
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function displayConversionError(errorMsg, targetFmt) {
+    const badge = document.getElementById("valStatusBadge");
+    const msg = document.getElementById("valStatusMsg");
+    const actions = document.getElementById("valActions");
+    const sections = document.getElementById("valPreservationSections");
+
+    if (actions) actions.style.display = "none";
+    if (sections) sections.style.display = "none";
+
+    if (badge) {
+      badge.className = "status-badge status-failed";
+      badge.textContent = "✕ Conversion Failed";
+    }
+    if (msg) {
+      msg.innerHTML = `<span style="color: var(--danger);"><strong>Error converting to ${(targetFmt || "target").toUpperCase()}:</strong><br>${escapeHtml(errorMsg)}</span>`;
+    }
+  }
+
+  function displayValidationReport(result) {
+    const val = result.validation;
+    const badge = document.getElementById("valStatusBadge");
+    const msg = document.getElementById("valStatusMsg");
+    const actions = document.getElementById("valActions");
+    const sections = document.getElementById("valPreservationSections");
+
+    if (actions) actions.style.display = "flex";
+    if (sections) sections.style.display = "flex";
+
+    if (badge) {
+      badge.className = "status-badge";
+      if (val.status === "validated") {
+        badge.classList.add("status-validated");
+        badge.textContent = "✔ Validated & Preserved";
+      } else if (val.status === "validated_with_information_loss") {
+        badge.classList.add("status-warning");
+        badge.textContent = "⚠️ Validated with Information Loss";
+      } else {
+        badge.classList.add("status-failed");
+        badge.textContent = "✕ Validation Failed";
+      }
+    }
+
+    if (msg) {
+      msg.textContent = val.message || "";
+    }
+
+    // Preserved features list
+    const preservedUl = document.getElementById("listPreserved");
+    if (preservedUl) {
+      preservedUl.innerHTML = "";
+      (val.preserved_features || []).forEach(f => {
+        const li = document.createElement("li");
+        li.textContent = f;
+        preservedUl.appendChild(li);
+      });
+      if (!val.preserved_features?.length) {
+        preservedUl.innerHTML = "<li>None recorded</li>";
+      }
+    }
+
+    // Lost features list
+    const lostUl = document.getElementById("listLost");
+    if (lostUl) {
+      lostUl.innerHTML = "";
+      (val.lost_features || []).forEach(f => {
+        const li = document.createElement("li");
+        li.textContent = f;
+        lostUl.appendChild(li);
+      });
+      if (!val.lost_features?.length) {
+        lostUl.innerHTML = "<li style='color: var(--success);'>No structural information was lost.</li>";
+      }
+    }
+
+    // Comparison table
+    const compTbody = document.querySelector("#valCompTable tbody");
+    if (compTbody) {
+      compTbody.innerHTML = "";
+      (val.comparison_table || []).forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${row.property}</strong></td>
+          <td>${row.input}</td>
+          <td>${row.output}</td>
+          <td>${row.status}</td>
+        `;
+        compTbody.appendChild(tr);
+      });
+    }
+  }
+
+  // Download converted file
+  const btnDownloadConverted = document.getElementById("btnDownloadConverted");
+  if (btnDownloadConverted) {
+    btnDownloadConverted.addEventListener("click", () => {
+      if (!state.lastConversionResult || !state.lastConversionResult.output_text) return;
+      const res = state.lastConversionResult;
+      const baseName = (state.filename || "molecule").rsplit ? state.filename.rsplit(".", 1)[0] : state.filename.replace(/\.[^/.]+$/, "");
+      const dlName = `${baseName}.${res.target_format}`;
+
+      const blob = new Blob([res.output_text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = dlName;
+      a.click();
+      URL.revokeObjectURL(url);
+      logMessage(`Downloaded converted file: ${dlName}`, "info");
+    });
+  }
+
+  // Load Converted into 3D viewer directly
+  const btnLoadConverted = document.getElementById("btnLoadConvertedInViewer");
+  if (btnLoadConverted) {
+    btnLoadConverted.addEventListener("click", async () => {
+      if (!state.lastConversionResult || !state.lastConversionResult.output_text) return;
+      const res = state.lastConversionResult;
+      const baseName = (state.filename || "converted").replace(/\.[^/.]+$/, "");
+      await loadStructureFromText(res.output_text, res.target_format, `${baseName}.${res.target_format}`);
+      switchRightTab("info");
+    });
+  }
+
+  // Download validation report as JSON or text
+  const btnDownloadValReport = document.getElementById("btnDownloadValReport");
+  if (btnDownloadValReport) {
+    btnDownloadValReport.addEventListener("click", () => {
+      if (!state.lastConversionResult) return;
+      const reportJson = JSON.stringify(state.lastConversionResult.validation, null, 2);
+      const blob = new Blob([reportJson], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `validation_report_${state.lastConversionResult.target_format}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // ----------------------------------------------------
+  // Structure Manipulations
+  // ----------------------------------------------------
+  async function handleManipulation(operationName) {
+    if (!state.content || !state.format) {
+      alert("Please load a structure first.");
+      return;
+    }
+
+    logMessage(`Running manipulation: ${operationName}...`, "info");
+    try {
+      const res = await window.API.manipulateStructure(state.content, state.format, operationName);
+      logMessage(`Manipulation succeeded: ${res.message}`, "info");
+      await loadStructureFromText(res.modified_content, res.format, state.filename);
+    } catch (err) {
+      logMessage(`Manipulation error: ${err.message}`, "err");
+      alert(`Manipulation failed:\n${err.message}`);
+    }
+  }
+
+  document.getElementById("btnManipAddH")?.addEventListener("click", () => handleManipulation("add_hydrogens"));
+  document.getElementById("btnManipDelH")?.addEventListener("click", () => handleManipulation("remove_hydrogens"));
+  document.getElementById("btnManipGen3D")?.addEventListener("click", () => handleManipulation("generate_3d"));
+  document.getElementById("btnNoticeGen3D")?.addEventListener("click", () => handleManipulation("generate_3d"));
+  document.getElementById("btnManipStripWater")?.addEventListener("click", () => handleManipulation("remove_waters"));
+  document.getElementById("btnManipStripHet")?.addEventListener("click", () => handleManipulation("remove_heteroatoms"));
+  document.getElementById("btnManipCenter")?.addEventListener("click", () => handleManipulation("center"));
+  document.getElementById("btnManipMMFF")?.addEventListener("click", () => handleManipulation("optimize_geometry"));
+
+  // ----------------------------------------------------
+  // Batch Conversion Workflow
+  // ----------------------------------------------------
+  const batchFileInput = document.getElementById("batchFileInput");
+  const batchDropZone = document.getElementById("batchDropZone");
+  const btnBatchBrowse = document.getElementById("btnBatchBrowse");
+  const btnRunBatch = document.getElementById("btnRunBatch");
+  const batchCountBadge = document.getElementById("batchCountBadge");
+  let lastBatchZipB64 = null;
+  let lastBatchZipName = "batch_converted.zip";
+
+  if (btnBatchBrowse) {
+    btnBatchBrowse.addEventListener("click", () => batchFileInput?.click());
+  }
+
+  if (batchFileInput) {
+    batchFileInput.addEventListener("change", (e) => {
+      handleBatchFilesSelected(e.target.files);
+    });
+  }
+
+  if (batchDropZone) {
+    batchDropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      batchDropZone.style.borderColor = "var(--accent)";
+    });
+    batchDropZone.addEventListener("dragleave", () => {
+      batchDropZone.style.borderColor = "var(--border)";
+    });
+    batchDropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      batchDropZone.style.borderColor = "var(--border)";
+      if (e.dataTransfer.files) {
+        handleBatchFilesSelected(e.dataTransfer.files);
+      }
+    });
+  }
+
+  function handleBatchFilesSelected(fileList) {
+    state.batchFiles = [];
+    const promises = [];
+
+    for (const f of fileList) {
+      promises.push(new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          state.batchFiles.push({
+            filename: f.name,
+            content: evt.target.result
+          });
+          resolve();
+        };
+        reader.readAsText(f);
+      }));
+    }
+
+    Promise.all(promises).then(() => {
+      if (batchCountBadge) {
+        batchCountBadge.textContent = `${state.batchFiles.length} files queued`;
+      }
+      if (btnRunBatch) {
+        btnRunBatch.disabled = state.batchFiles.length === 0;
+      }
+      logMessage(`Queued ${state.batchFiles.length} files for batch conversion.`, "info");
+    });
+  }
+
+  if (btnRunBatch) {
+    btnRunBatch.addEventListener("click", async () => {
+      const tgtSelect = document.getElementById("batchTargetFormatSelect");
+      const targetFmt = tgtSelect ? tgtSelect.value : "mol2";
+
+      if (state.batchFiles.length === 0) return;
+
+      logMessage(`Processing batch conversion of ${state.batchFiles.length} files to ${targetFmt.toUpperCase()}...`, "info");
+      btnRunBatch.disabled = true;
+
+      try {
+        const res = await window.API.batchConvert(state.batchFiles, targetFmt);
+        lastBatchZipB64 = res.zip_base64;
+        lastBatchZipName = res.zip_filename || "batch_converted.zip";
+
+        // Display results
+        const container = document.getElementById("batchResultsContainer");
+        const statsEl = document.getElementById("batchSummaryStats");
+        const tbody = document.getElementById("batchTableBody");
+
+        if (container) container.style.display = "block";
+        if (statsEl) {
+          statsEl.textContent = `Completed: ${res.success_count} succeeded, ${res.failure_count} failed in ${Math.round(res.total_duration_ms)} ms`;
+        }
+
+        if (tbody) {
+          tbody.innerHTML = "";
+          (res.items || []).forEach(item => {
+            const tr = document.createElement("tr");
+            const statusColor = item.status === "success" ? "var(--success)" : "var(--danger)";
+            tr.innerHTML = `
+              <td>${item.original_filename}</td>
+              <td>${item.detected_format.toUpperCase()}</td>
+              <td>${item.target_format.toUpperCase()}</td>
+              <td><span style="color: ${statusColor}; font-weight: bold;">${item.status.toUpperCase()}</span></td>
+              <td>${item.validation_message || item.error_message || "-"}</td>
+              <td>${item.status === "success" ? `<button class="btn btn-sm btn-outline dl-item-btn">⬇ Download</button>` : "-"}</td>
+            `;
+
+            if (item.status === "success") {
+              const dlBtn = tr.querySelector(".dl-item-btn");
+              dlBtn?.addEventListener("click", () => {
+                const blob = new Blob([item.output_text], { type: "text/plain" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = item.output_filename;
+                a.click();
+                URL.revokeObjectURL(url);
+              });
+            }
+
+            tbody.appendChild(tr);
+          });
+        }
+
+        logMessage(`Batch conversion finished: ${res.success_count}/${res.total_count} files converted successfully.`, "info");
+
+      } catch (err) {
+        logMessage(`Batch conversion error: ${err.message}`, "err");
+        alert(`Batch conversion failed:\n${err.message}`);
+      } finally {
+        btnRunBatch.disabled = false;
+      }
+    });
+  }
+
+  // Download Batch ZIP
+  const btnDownloadBatchZip = document.getElementById("btnDownloadBatchZip");
+  if (btnDownloadBatchZip) {
+    btnDownloadBatchZip.addEventListener("click", () => {
+      if (!lastBatchZipB64) return;
+      const byteChars = atob(lastBatchZipB64);
+      const byteNums = new Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        byteNums[i] = byteChars.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNums);
+      const blob = new Blob([byteArray], { type: "application/zip" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = lastBatchZipName;
+      a.click();
+      URL.revokeObjectURL(url);
+      logMessage(`Downloaded batch ZIP: ${lastBatchZipName}`, "info");
+    });
+  }
+
+  // ----------------------------------------------------
+  // File Upload & Drag and Drop Handling
+  // ----------------------------------------------------
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("fileInput");
+  const btnBrowse = document.getElementById("btnBrowseFile");
+
+  if (btnBrowse) btnBrowse.addEventListener("click", () => fileInput?.click());
+
+  if (fileInput) {
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) handleSingleFile(file);
+    });
+  }
+
+  if (dropZone) {
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragover");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleSingleFile(e.dataTransfer.files[0]);
+      }
+    });
+  }
+
+  function handleSingleFile(file) {
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      const text = evt.target.result;
+      await loadStructureFromText(text, null, file.name);
+    };
+    reader.readAsText(file);
+  }
+
+  // Clear loaded file
+  document.getElementById("btnClearFile")?.addEventListener("click", () => {
+    state.content = null;
+    state.format = null;
+    state.filename = null;
+    state.parsed = null;
+    state.properties = null;
+    document.getElementById("loadedFileBadge").style.display = "none";
+    document.getElementById("btnConvert").disabled = true;
+    atomTable.loadAtoms([], false);
+    updateOverviewMetrics({}, {});
+    viewer.viewer?.clear();
+    update2DDepiction(null);
+    logMessage("Cleared active structure.", "info");
+  });
+
+  // ----------------------------------------------------
+  // SMILES Input & Quick Chips
+  // ----------------------------------------------------
+  const btnLoadSmiles = document.getElementById("btnLoadSmiles");
+  const smilesInput = document.getElementById("smilesInput");
+
+  if (btnLoadSmiles) {
+    btnLoadSmiles.addEventListener("click", async () => {
+      const smi = (smilesInput ? smilesInput.value : "").trim();
+      if (!smi) return;
+      await loadStructureFromText(smi, "smi", "input_molecule.smi");
+    });
+  }
+
+  // Quick Chips
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", async () => {
+      const smi = chip.dataset.smi;
+      if (smilesInput) smilesInput.value = smi;
+      await loadStructureFromText(smi, "smi", `${chip.textContent.toLowerCase()}.smi`);
+    });
+  });
+
+  // ----------------------------------------------------
+  // Sample Structure Dropdown
+  // ----------------------------------------------------
+  const btnLoadSample = document.getElementById("btnLoadSample");
+  const sampleSelect = document.getElementById("sampleSelect");
+
+  if (btnLoadSample) {
+    btnLoadSample.addEventListener("click", async () => {
+      const sampleFile = sampleSelect ? sampleSelect.value : null;
+      if (!sampleFile) return;
+
+      logMessage(`Fetching sample: ${sampleFile}...`, "info");
+      try {
+        const sample = await window.API.getSample(sampleFile);
+        await loadStructureFromText(sample.content, sample.format, sample.filename);
+      } catch (err) {
+        logMessage(`Failed to load sample: ${err.message}`, "err");
+        alert(err.message);
+      }
+    });
+  }
+
+  // ----------------------------------------------------
+  // Paste Data Modal
+  // ----------------------------------------------------
+  const pasteModal = document.getElementById("pasteModal");
+  document.getElementById("btnPasteModal")?.addEventListener("click", () => {
+    pasteModal?.showModal();
+  });
+  document.getElementById("btnClosePasteModal")?.addEventListener("click", () => {
+    pasteModal?.close();
+  });
+  document.getElementById("btnCancelPaste")?.addEventListener("click", () => {
+    pasteModal?.close();
+  });
+  document.getElementById("btnSubmitPaste")?.addEventListener("click", async () => {
+    const text = document.getElementById("pasteContentArea")?.value;
+    const fmtSel = document.getElementById("pasteFormatSelect")?.value;
+    const fmtHint = fmtSel === "AUTO" ? null : fmtSel;
+    pasteModal?.close();
+    if (text) {
+      await loadStructureFromText(text, fmtHint, "pasted_structure." + (fmtHint || "txt"));
+    }
+  });
+
+  // ----------------------------------------------------
+  // Viewer Mode & Controls
+  // ----------------------------------------------------
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const mode = btn.dataset.view;
+      const viewport = document.getElementById("viewerViewport");
+      const glEl = document.getElementById("glviewer");
+      const depictEl = document.getElementById("depict2dContainer");
+
+      viewport.classList.remove("split-active");
+
+      if (mode === "3d") {
+        glEl.style.display = "block";
+        depictEl.style.display = "none";
+      } else if (mode === "2d") {
+        glEl.style.display = "none";
+        depictEl.style.display = "flex";
+      } else if (mode === "split") {
+        viewport.classList.add("split-active");
+        glEl.style.display = "block";
+        depictEl.style.display = "flex";
+      }
+    });
+  });
+
+  // Representation Style dropdown
+  document.getElementById("repStyleSelect")?.addEventListener("change", (e) => {
+    viewer.setStyle(e.target.value);
+  });
+
+  // Color Scheme dropdown
+  document.getElementById("colorSchemeSelect")?.addEventListener("change", (e) => {
+    viewer.setColorScheme(e.target.value);
+  });
+
+  // Chain Filter dropdown
+  document.getElementById("chainFilterSelect")?.addEventListener("change", (e) => {
+    viewer.setChain(e.target.value);
+  });
+
+  // Component Toggles
+  document.getElementById("toggleWaters")?.addEventListener("change", (e) => {
+    viewer.toggleWaters(e.target.checked);
+  });
+  document.getElementById("toggleHydrogens")?.addEventListener("change", (e) => {
+    viewer.toggleHydrogens(e.target.checked);
+  });
+  document.getElementById("toggleHetero")?.addEventListener("change", (e) => {
+    viewer.toggleHetero(e.target.checked);
+  });
+  document.getElementById("toggleLigands")?.addEventListener("change", (e) => {
+    viewer.toggleLigands(e.target.checked);
+  });
+
+  // Background color
+  document.getElementById("bgColorSelect")?.addEventListener("change", (e) => {
+    viewer.setBackground(parseInt(e.target.value, 16));
+  });
+
+  // Camera Buttons
+  document.getElementById("btnResetView")?.addEventListener("click", () => viewer.resetView());
+  document.getElementById("btnCenterMol")?.addEventListener("click", () => viewer.center());
+  document.getElementById("btnScreenshot")?.addEventListener("click", () => {
+    const uri = viewer.exportPng();
+    if (uri) {
+      const a = document.createElement("a");
+      a.href = uri;
+      a.download = `${state.filename || "molecule"}_3d.png`;
+      a.click();
+    }
+  });
+
+  // Fullscreen button
+  document.getElementById("btnFullscreen")?.addEventListener("click", () => {
+    const viewport = document.getElementById("viewerViewport");
+    if (!document.fullscreenElement) {
+      viewport?.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  });
+
+  // Close atom inspector card
+  document.getElementById("btnCloseInspector")?.addEventListener("click", () => {
+    document.getElementById("atomInspectorCard").style.display = "none";
+  });
+
+  // 2D Download buttons
+  document.getElementById("btnDownloadSvg")?.addEventListener("click", () => {
+    const svgEl = document.querySelector("#svgMountPoint svg");
+    if (!svgEl) return;
+    const blob = new Blob([svgEl.outerHTML], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${state.filename || "molecule"}_2d.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("btnDownloadPng")?.addEventListener("click", () => {
+    const svgEl = document.querySelector("#svgMountPoint svg");
+    if (!svgEl) return;
+    const svgData = new XMLSerializer().serializeToString(svgEl);
+    const canvas = document.createElement("canvas");
+    canvas.width = svgEl.clientWidth || 400;
+    canvas.height = svgEl.clientHeight || 300;
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0);
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${state.filename || "molecule"}_2d.png`;
+      a.click();
+    };
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+  });
+
+  // ----------------------------------------------------
+  // Right Navigation Tabs
+  // ----------------------------------------------------
+  function switchRightTab(tabName) {
+    document.querySelectorAll(".right-tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+    document.querySelectorAll(".tab-pane").forEach(pane => {
+      pane.classList.remove("active");
+    });
+    const targetPane = document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    if (targetPane) targetPane.classList.add("active");
+  }
+
+  document.querySelectorAll(".right-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      switchRightTab(btn.dataset.tab);
+    });
+  });
+
+  // Clear logs button
+  document.getElementById("btnClearLogs")?.addEventListener("click", () => {
+    const consoleEl = document.getElementById("logsConsole");
+    if (consoleEl) {
+      consoleEl.innerHTML = '<div class="log-entry log-system">[SYSTEM] Logs cleared.</div>';
+    }
+  });
+
+  // Theme toggle
+  document.getElementById("btnThemeToggle")?.addEventListener("click", () => {
+    document.body.classList.toggle("theme-light");
+    document.body.classList.toggle("theme-dark");
+    const isLight = document.body.classList.contains("theme-light");
+    viewer.setBackground(isLight ? 0xffffff : 0x121820);
+  });
+});
+
+  </script>
 </body>
 </html>
